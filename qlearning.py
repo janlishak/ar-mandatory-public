@@ -74,9 +74,10 @@ class ReinforcementProblem:
 
         left = Action("LEFT")
         right = Action("RIGHT")
-        forward = Action("FORWARD")
-        stop = Action("STOP")
-        self.ALL_ACTIONS = [left, right, forward, stop]
+        # forward = Action("FORWARD")
+        # stop = Action("STOP")
+        # self.ALL_ACTIONS = [left, right, forward, stop]
+        self.ALL_ACTIONS = [left, right]
 
     def get_current_state(self) -> State:
         return State(self.camera)
