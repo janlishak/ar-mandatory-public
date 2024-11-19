@@ -103,7 +103,7 @@ if __name__ == "__main__":
 
     print("LED set to green")
     controller.set_led([0, 32, 0])  # Set the LED to green
-    time.sleep(1)
+    time.sleep(2)
 
     # RUN TEST
     test1()
