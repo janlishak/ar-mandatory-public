@@ -1,3 +1,5 @@
 username: sixers
 password: 12345six
 network: sensors / 192.168.74.27
+
+flatpak run --command=thymio-device-manager org.mobsya.ThymioSuite
