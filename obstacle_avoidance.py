@@ -46,13 +46,7 @@ class ThymioController:
 
         # Use the ClientAsync context manager to handle the connection to the Thymio robot.
         with ClientAsync() as client:
-
             async def prog():
-                """
-                Asynchronous function controlling the Thymio's behavior.
-                """
-
-                # Lock the node representing the Thymio to ensure exclusive access.
                 with await client.lock() as node:
 
                     # Wait for the robot's proximity sensors to be ready.
