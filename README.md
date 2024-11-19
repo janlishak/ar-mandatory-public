@@ -39,11 +39,10 @@ for best performing robots. Handin of a group report documenting your project th
 
 ### Plan:
 
-Stage 1: 
+Stage 1: Make it move.
 
 - Identify each sensor on the thymio bot w.r.t. actual position etc
 - Identify distance sensors detect other robots - thymio docs suggest 15cm, but seems it can be tagged up to 29cm??
-- 
 - Get baseline sensor readings. When we have an environment, these should be logged as the bot moves around to finetune.
 	- black < 70
 	- shiny > 800
@@ -51,4 +50,4 @@ Stage 1:
 - Update obstacle avoidance code for this environment
 - Rewrite provided code to avoid using async
 
-	
+End of stage 1: A robot that can move around the environment, staying within the border.
