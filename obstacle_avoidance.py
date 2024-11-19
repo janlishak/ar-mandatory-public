@@ -58,7 +58,7 @@ class ThymioController:
                     while True:
                         
                         prox_values = node.v.prox.horizontal
-                        ground_values = node.v.prox.ground
+                        ground_values = node.v.prox.ground.reflected
 
                         for i in range(7):
                             print(f"F Sensors: {prox_values[i]}", sep="")
