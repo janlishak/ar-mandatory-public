@@ -3,7 +3,7 @@ import time
 from tdmclient import ClientAsync
 
 
-class ThymioControllercd:
+class ThymioController:
     def __init__(self):
         self.client = ClientAsync()
         self.motor_values = [0, 0]  # Default motor values
