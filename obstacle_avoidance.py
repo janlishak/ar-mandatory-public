@@ -68,11 +68,11 @@ class ThymioController:
                             print(f"G Sensors: {ground_values[i]}", sep="")
                         print("")
 
-                        if sum(prox_values) > 20000:
-                            print("it should stop")
-                            node.v.motor.left.target = 0
-                            node.v.motor.right.target = 0
-                            break
+                        # if sum(prox_values) > 20000:
+                        #     print("it should stop")
+                        #     node.v.motor.left.target = 0
+                        #     node.v.motor.right.target = 0
+                        #     break
 
                         if ground_values[0] < 500 or ground_values[1] < 500:
                             print("Dark floor detected!")
