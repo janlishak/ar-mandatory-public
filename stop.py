@@ -26,7 +26,7 @@ class ThymioController:
     def __init__(self):
 
         def behaviorOA(prox_values):
-            return 100, 100
+            return 0, 0
 
         # Use the ClientAsync context manager to handle the connection to the Thymio robot.
         with ClientAsync() as client:
