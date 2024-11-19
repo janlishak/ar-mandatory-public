@@ -17,7 +17,7 @@ avoider_program = """
 var send_interval = 200  # time in milliseconds
 timer.period[0] = send_interval
 call prox.comm.enable(1)
-leds.top = [0, 32, 0]
+leds.top = [0, 0, 32]
 
 timer.period[0] = send_interval
 
