@@ -59,11 +59,11 @@ class ThymioController:
                         prox_values = node.v.prox.horizontal
                         ground_values = node.v.prox.ground.delta
 
-                        for i in range(len(prox_values)):
+                        for i in range(7):
                             print(f"F Sensors: {prox_values[i]}", sep="")
                         print("")
 
-                        for i in range(len(ground_values)):
+                        for i in range(2):
                             print(f"G Sensors: {ground_values[i]}", sep="")
                         print("")
 
