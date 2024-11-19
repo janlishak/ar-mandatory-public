@@ -74,13 +74,13 @@ class ThymioController:
                         #     node.v.motor.right.target = 0
                         #     break
 
-                        if ground_values[0] < 500 or ground_values[1] < 500:
-                            print("Dark floor detected!")
-                            node.v.leds.bottom.left = [32, 0, 0]  # Red LED for left sensor
-                            node.v.leds.bottom.right = [32, 0, 0]  # Red LED for right sensor
-                        else:
-                            node.v.leds.bottom.left = [0, 32, 0]  # Green LED
-                            node.v.leds.bottom.right = [0, 32, 0]  # Green LED
+                        # if ground_values[0] < 500 or ground_values[1] < 500:
+                        #     print("Dark floor detected!")
+                        #     node.v.leds.bottom.left = [32, 0, 0]  # Red LED for left sensor
+                        #     node.v.leds.bottom.right = [32, 0, 0]  # Red LED for right sensor
+                        # else:
+                        #     node.v.leds.bottom.left = [0, 32, 0]  # Green LED
+                        #     node.v.leds.bottom.right = [0, 32, 0]  # Green LED
 
                         speeds = behaviorOA(prox_values)
                         node.v.motor.left.target = speeds[1]
