@@ -44,7 +44,7 @@ with ClientAsync() as client:
             # Lock the node representing the Thymio to ensure exclusive access.
             with await client.lock() as node:
                 # Compile and send the program to the Thymio.
-                error = await node.compile(seeker_program)
+                error = await node.compile(avoider_program)
                 if error is not None:
                     print(f"Compilation error: {error['error_msg']}")
                 else:
