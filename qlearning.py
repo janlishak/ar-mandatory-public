@@ -3,16 +3,16 @@ import os
 import time
 import pickle
 import random
-from camera import Camera
+from image_processor import ImageProcessor, ComputerCamera
 
 
 class State:
-    def __init__(self, camera) -> None:
+    def __init__(self, image_processor) -> None:
         self.data = []
 
         resolution = 10
-        mapped_x = int(camera.cX * resolution / camera.width)
-        mapped_y = int(camera.cY * resolution / camera.height)
+        mapped_x = int(image_processor.cX * resolution / image_processor.width)
+        mapped_y = int(image_processor.cY * resolution / image_processor.height)
 
         self.data.append(mapped_x)
 
@@ -69,8 +69,10 @@ class QValueStore:
 
 class ReinforcementProblem:
     def __init__(self) -> None:
-        self.camera = Camera()
-        self.camera.update()
+        self.camera = ComputerCamera()
+        self.image_processor = ImageProcessor()
+        self.image_processor.set_frame_provider(self.camera.read_frame)
+        self.image_processor.update()
 
         left = Action("LEFT")
         right = Action("RIGHT")
@@ -80,7 +82,7 @@ class ReinforcementProblem:
         self.ALL_ACTIONS = [left, right]
 
     def get_current_state(self) -> State:
-        return State(self.camera)
+        return State(self.image_processor)
 
     # Get the available actions for the given state.
     def get_available_actions(self, state: State) -> list[Action]:
@@ -92,7 +94,7 @@ class ReinforcementProblem:
         reward = 0
 
         # todo: take the action
-        self.camera.updateForSeconds(0.5)
+        self.image_processor.updateForSeconds(0.5)
         newState = self.get_current_state()
 
         return reward, newState
@@ -185,7 +187,7 @@ if __name__ == "__main__":
     iterations = 100_00_000_000
     learning_rate = 0.1
     discount_rate = 0 # myopic (short-term focused) policy
-    exploration_rate = 0.25 # on average every 4th action is random
+    exploration_rate = 0.2 # on average every 4th action is random
 
     if run == 0:
         print("learning")

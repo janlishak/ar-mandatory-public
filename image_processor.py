@@ -1,16 +1,16 @@
 import cv2
 import numpy as np
 import time
+import threading
 
 
-class Camera:
+class ComputerCamera:
     def __init__(self) -> None:
         # Start capturing video
-        self.height = None
-        self.width = None
-        self.cY = 0
-        self.cX = 0
-        self.cap = cv2.VideoCapture(0)
+        self.cap = cv2.VideoCapture(1)
+        if not self.cap.isOpened():
+            print("Cannot open camera")
+            exit()
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
@@ -37,18 +37,41 @@ class Camera:
         self.cap.set(cv2.CAP_PROP_WHITE_BALANCE_BLUE_U, white_balance)  # Set the current white balance
         print("Camera settings locked. Exposure:", exposure, "White Balance:", white_balance)
 
-        if not self.cap.isOpened():
-            print("Cannot open camera")
+    def read_frame(self):
+        # Capture frame-by-frame
+        ret, frame = self.cap.read()
+        if not ret:
+            print("Can't receive frame (stream end?). Exiting ...")
             exit()
+        return frame
+
+
+class ImageProcessor:
+    def __init__(self) -> None:
+        self.found = False
+        self.height = None
+        self.width = None
+        self.cY = 0
+        self.cX = 0
+        self.image_read_function = None
 
         cv2.namedWindow('image')
-        cv2.createTrackbar('HUE low', 'image', 19, 359, self.nothing)  # Max hue in OpenCV is 179
-        cv2.createTrackbar('HUE high', 'image', 41, 359, self.nothing)
-        cv2.createTrackbar('SAT low', 'image', 145, 255, self.nothing)
-        cv2.createTrackbar('SAT high', 'image', 255, 255, self.nothing)
-        cv2.createTrackbar('VAL low', 'image', 154, 255, self.nothing)
-        cv2.createTrackbar('VAL high', 'image', 252, 255, self.nothing)
-        cv2.createTrackbar('BLR', 'image', 3, 255, self.nothing)
+        cv2.createTrackbar('HUE low', 'image', 19, 359, self.print_trackbar_values)
+        cv2.createTrackbar('HUE high', 'image', 41, 359, self.print_trackbar_values)
+        cv2.createTrackbar('SAT low', 'image', 145, 255, self.print_trackbar_values)
+        cv2.createTrackbar('SAT high', 'image', 255, 255, self.print_trackbar_values)
+        cv2.createTrackbar('VAL low', 'image', 154, 255, self.print_trackbar_values)
+        cv2.createTrackbar('VAL high', 'image', 252, 255, self.print_trackbar_values)
+        cv2.createTrackbar('BLR', 'image', 3, 255, self.print_trackbar_values)
+        cv2.createTrackbar('AREA', 'image', 500, 1000, self.print_trackbar_values)
+
+    def get_frame(self):
+        if self.image_read_function is None:
+            raise Exception("Set image read function!")
+        return self.image_read_function()
+
+    def set_frame_provider(self, image_read_function):
+        self.image_read_function = image_read_function
 
     def update(self):
         # Get the trackbar positions for HSV bounds
@@ -59,25 +82,30 @@ class Camera:
         lower_value = cv2.getTrackbarPos('VAL low', 'image')
         upper_value = cv2.getTrackbarPos('VAL high', 'image')
         blr = cv2.getTrackbarPos('BLR', 'image')
+        min_area = cv2.getTrackbarPos('AREA', 'image')
         if blr%2 == 0:
             blr+=1
-        # Capture frame-by-frame
-        ret, frame = self.cap.read()
-        if not ret:
-            print("Can't receive frame (stream end?). Exiting ...")
-            exit()
+            cv2.setTrackbarPos('BLR', 'image', blr)
 
-        frame_height, frame_width = frame.shape[:2]
-        self.height = frame_height // 2
-        self.width = frame_width // 2
+        frame = self.get_frame()
+
+        # # resize to half resolution
+        # frame_height, frame_width = frame.shape[:2]
+        # self.height = frame_height // 2
+        # self.width = frame_width // 2
+
+        # resize to fixed resolution
+        self.height = 120
+        self.width = 160
 
         # warning - mutation of frame
         frame = cv2.resize(frame, (self.width, self.height))
 
         # Apply Gaussian Blur and convert to HSV
         # Loop over different blur kernel sizes
-        for blr in range(1, 21, 2):  # Using odd kernel sizes from 1 to 19
-            blurred_image = cv2.GaussianBlur(frame, (blr, blr), 0)
+        # for blr in range(1, 10, 2):  # Using odd kernel sizes from 1 to 19
+        #     blurred_image = cv2.GaussianBlur(frame, (blr, blr), 0)
+        blurred_image = cv2.GaussianBlur(frame, (blr, blr), 0)
 
         hsv = cv2.cvtColor(blurred_image, cv2.COLOR_BGR2HSV)
 
@@ -98,13 +126,14 @@ class Camera:
         # Iterate through contours to find the largest one
         for contour in contours:
             area = cv2.contourArea(contour)
-            if area > 500:  # Only consider contours above a certain area threshold
+            if area > min_area:  # Only consider contours above a certain area threshold
                 if area > largest_area:
                     largest_area = area
                     largest_contour = contour
 
         # Draw contours and find the midpoint
         if largest_contour is not None:
+            self.found = True
             # Draw the largest contour in red
             cv2.drawContours(frame, [largest_contour], -1, (0, 0, 255), 3)  # Red
 
@@ -124,11 +153,13 @@ class Camera:
                 resolution = 10
                 mapped_x = int(self.cX * resolution / self.width)
                 mapped_y = int(self.cY * resolution / self.height)
-                cv2.putText(frame, f'X: {mapped_x}, Y: {mapped_y}', (self.cX + 10, self.cY - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)  # White text
+                cv2.putText(frame, f'X: {mapped_x}, Y: {mapped_y}', (self.cX + 10, self.cY - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)  # White text
+        else:
+            self.found = False
 
         # Draw other contours in green
         for contour in contours:
-            if contour is not largest_contour and cv2.contourArea(contour) > 500:
+            if contour is not largest_contour and cv2.contourArea(contour) > min_area:
                 cv2.drawContours(frame, [contour], -1, (0, 255, 0), 3)  # Green
 
         # Convert the mask to a 3-channel image for concatenation
@@ -136,6 +167,7 @@ class Camera:
 
         # Concatenate original frame and mask side by side
         combined = np.hstack((frame, mask_3channel))
+        # combined = np.hstack((blurred_image, mask_3channel))
 
         # Display the combined image
         cv2.imshow('image', combined)
@@ -149,10 +181,43 @@ class Camera:
         start_time = time.time()
         while time.time() - start_time < duration:
             self.update()
+
     def quit(self):
         # Release the capture and close windows
         self.cap.release()
         cv2.destroyAllWindows()
 
-    def nothing(self, x):
-        pass
+    def print_trackbar_values(self, trackbar_values):
+        # Retrieve all trackbar values and print them in a list format
+        values = [
+            cv2.getTrackbarPos('HUE low', 'image'),
+            cv2.getTrackbarPos('HUE high', 'image'),
+            cv2.getTrackbarPos('SAT low', 'image'),
+            cv2.getTrackbarPos('SAT high', 'image'),
+            cv2.getTrackbarPos('VAL low', 'image'),
+            cv2.getTrackbarPos('VAL high', 'image'),
+            cv2.getTrackbarPos('BLR', 'image'),
+            cv2.getTrackbarPos('AREA', 'image')
+        ]
+        print("Trackbar Values:", values)
+
+    def set_trackbar_values(self, values):
+        # Set all trackbars from a list of values
+        cv2.setTrackbarPos('HUE low', 'image', values[0])
+        cv2.setTrackbarPos('HUE high', 'image', values[1])
+        cv2.setTrackbarPos('SAT low', 'image', values[2])
+        cv2.setTrackbarPos('SAT high', 'image', values[3])
+        cv2.setTrackbarPos('VAL low', 'image', values[4])
+        cv2.setTrackbarPos('VAL high', 'image', values[5])
+        cv2.setTrackbarPos('BLR', 'image', values[6])
+        cv2.setTrackbarPos('AREA', 'image', values[7])
+
+
+if __name__ == '__main__':
+    computer_camera = ComputerCamera()
+    image_processor = ImageProcessor()
+    image_processor.set_frame_provider(computer_camera.read_frame)
+
+    while True:
+        image_processor.update()
+
