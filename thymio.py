@@ -5,7 +5,6 @@ from tdmclient import ClientAsync
 
 class ThymioController:
     def __init__(self):
-        self.client = ClientAsync()
         self.motor_values = [0, 0]  # Default motor values
         self.led_values = [0, 0, 0]  # Default LED values
         self.running = True
@@ -15,31 +14,31 @@ class ThymioController:
         self.thread.start()
 
     def run_background(self):
-        async def prog():
-            async with self.client.lock() as node:
-                await node.wait_for_variables({"prox.horizontal"}) # todo: probably not needed anymore
-                node.send_set_variables({"leds.top": [0, 0, 32]})  # Initial LED state
-                print("ThymioController is running in the background.")
+        with ClientAsync() as client:
+            async def prog():
+                with await client.lock() as node:
+                    await node.wait_for_variables({"prox.horizontal"}) # todo: probably not needed anymore
+                    node.send_set_variables({"leds.top": [0, 0, 32]})  # Initial LED state
+                    print("ThymioController is running in the background.")
 
-                while self.running:
-                    # Apply the latest motor and LED values
-                    node.v.motor.left.target = self.motor_values[0]
-                    node.v.motor.right.target = self.motor_values[1]
-                    node.v.leds.top = self.led_values
-                    # todo: maybe only flush when values changes?
+                    while self.running:
+                        # Apply the latest motor and LED values
+                        node.v.motor.left.target = self.motor_values[0]
+                        node.v.motor.right.target = self.motor_values[1]
+                        node.v.leds.top = self.led_values
+                        # todo: maybe only flush when values changes?
+                        node.flush()
+                        # todo: maybe this too fast?
+                        await self.client.sleep(0.1)
+
+                    # Stop motors and set LED to red before exiting
+                    node.v.motor.left.target = 0
+                    node.v.motor.right.target = 0
+                    node.v.leds.top = [32, 0, 0]
                     node.flush()
-                    # todo: maybe this too fast?
-                    await self.client.sleep(0.1)
-
-                # Stop motors and set LED to red before exiting
-                node.v.motor.left.target = 0
-                node.v.motor.right.target = 0
-                node.v.leds.top = [32, 0, 0]
-                node.flush()
-                print("ThymioController has stopped.")
-
-        # Run the async Thymio program
-        self.client.run_async_program(prog)
+                    print("ThymioController has stopped.")
+                # Run the async Thymio program
+            client.run_async_program(prog)
 
     def set_motors(self, values):
         self.motor_values = values
