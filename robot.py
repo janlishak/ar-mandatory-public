@@ -53,21 +53,32 @@ class ThymioController:
         self.running = False
         self.thread.join()
 
-    def perform_action(self, action: str):
+    def perform_action(self, action: str, speed: int=100):
+        # Keep speed within motor ranges
+        if speed > 500:
+            speed = 500
+        elif speed < -500:
+            speed = -500
+
         if action == "LEFT":
-            self.set_motors([-100, 100])
+            self.set_motors([-speed, speed])
             return
         if action == "RIGHT":
-            self.set_motors([100, -100])
+            self.set_motors([speed, -speed])
             return
         if action == "FORWARD":
-            self.set_motors([100, 100])
+            self.set_motors([speed, speed])
             return
         if action == "STOP":
             self.set_motors([0, 0])
         else:
             print("Invalid action!")
             self.set_motors([0, 0])
+
+
+    def explore(self):
+        pass
+    
 
 def test1():
     print("Motors set to [100, -100]")
