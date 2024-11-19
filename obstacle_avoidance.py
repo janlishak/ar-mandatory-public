@@ -61,10 +61,22 @@ class ThymioController:
                     node.send_set_variables({"leds.top": [0, 0, 32]})
                     print("Thymio started successfully!")
                     while True:
+                        
                         prox_values = node.v.prox.horizontal
+                        ground_values = node.v.prox.ground.delta
+                        
+                        print(f"Front Proximity: {prox_values}, Ground Sensors: {ground_values}")
 
                         if sum(prox_values) > 20000:
                             break
+
+                        if ground_values[0] < 500 or ground_values[1] < 500:
+                            print("Dark floor detected!")
+                            node.v.leds.bottom.left = [32, 0, 0]  # Red LED for left sensor
+                            node.v.leds.bottom.right = [32, 0, 0]  # Red LED for right sensor
+                        else:
+                            node.v.leds.bottom.left = [0, 32, 0]  # Green LED
+                            node.v.leds.bottom.right = [0, 32, 0]  # Green LED
 
                         speeds = behaviorOA(prox_values)
                         node.v.motor.left.target = speeds[1]
