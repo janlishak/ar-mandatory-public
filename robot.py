@@ -8,6 +8,8 @@ class ThymioController:
         self.motor_values = [0, 0]  # Default motor values
         self.led_values = [0, 0, 0]  # Default LED values
         self.running = True
+        self.horizontal_sensors = None
+        self.ground_sensors = None
         # Start the background thread that will run the Thymio control loop
         self.thread = threading.Thread(target=self.run_background, daemon=True)
         self.thread.start()
@@ -28,6 +30,9 @@ class ThymioController:
                         node.v.motor.left.target = self.motor_values[0]
                         node.v.motor.right.target = self.motor_values[1]
                         node.v.leds.top = self.led_values
+                        # Pass the sensors to the robot
+                        self.horizontal_sensors = node.v.prox.horizontal
+                        self.ground_sensors = node.v.prox.ground.reflected
                         # Apply changes to the Thymio
                         node.flush()
                         # Sleep for 0.1 seconds to prevent overloading
@@ -77,8 +82,44 @@ class ThymioController:
 
 
     def explore(self):
-        pass
+
+        whereami = self.detect_surface()
+
+        if whereami == "safe-zone":
+            self.perform_action("STOP")
+        elif whereami == "safe-zone-left":
+            self.perform_action("LEFT", 50)
+        elif whereami == "safe-zone-right":
+            self.perform_action("RIGHT", 50)
+        elif whereami == "black-tape":
+            self.perform_action("LEFT", 250)
+        elif whereami == "black-tape-left":
+            self.perform_action("RIGHT", 150)
+        elif whereami == "black-tape-right":
+            self.perform_action("LEFT", 150)
+        else: ## JUST MOVE AHEAD
+            self.perform_action("FORWARD", 500)
+
+        return
     
+
+    def detect_surface(self):
+        ## First, check where you are standing
+        if (self.ground_sensors[0] > 900) & (self.ground_sensors[1] > 900): # Safe zone
+            return "safe-zone"
+        elif (self.ground_sensors[0] > 900): # Safe zone to the left
+            return "safe-zone-left"
+        elif (self.ground_sensors[1] > 900):
+            return "safe-zone-right"
+        elif (self.ground_sensors[0] < 400) & (self.ground_sensors[1] < 400): # Black tape
+            return "black-tape"
+        elif (self.ground_sensors[0] < 400):
+            return "black-tape-left"
+        elif (self.ground_sensors[0] < 400):
+            return "black-tape-right"
+        else:
+            return "open-ground"
+
 
 def test1():
     print("Motors set to [100, -100]")
