@@ -26,6 +26,7 @@ class ThymioController:
     def __init__(self):
 
         def behaviorOA(prox_values):
+            return 0,0
             """
             Obstacle avoidance behavior function.
             Given the proximity sensor values, it determines the Thymio's motion.
