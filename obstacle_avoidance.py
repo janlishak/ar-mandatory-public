@@ -58,10 +58,19 @@ class ThymioController:
                         
                         prox_values = node.v.prox.horizontal
                         ground_values = node.v.prox.ground.delta
-                        
-                        print(f"Front Proximity: {prox_values}, Ground Sensors: {ground_values}")
+
+                        for i in range(len(prox_values)):
+                            print(f"F Sensors: {prox_values[i]}", sep="")
+                        print("")
+
+                        for i in range(len(ground_values)):
+                            print(f"G Sensors: {ground_values[i]}", sep="")
+                        print("")
 
                         if sum(prox_values) > 20000:
+                            print("it should stop")
+                            node.v.motor.left.target = 0
+                            node.v.motor.right.target = 0
                             break
 
                         if ground_values[0] < 500 or ground_values[1] < 500:
