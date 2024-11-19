@@ -26,7 +26,6 @@ class ThymioController:
     def __init__(self):
 
         def behaviorOA(prox_values):
-            return 0,0
             """
             Obstacle avoidance behavior function.
             Given the proximity sensor values, it determines the Thymio's motion.
@@ -56,32 +55,7 @@ class ThymioController:
                     node.send_set_variables({"leds.top": [0, 0, 32]})
                     print("Thymio started successfully!")
                     while True:
-                        
                         prox_values = node.v.prox.horizontal
-                        ground_values = node.v.prox.ground.reflected
-
-                        for i in range(7):
-                            print(f"F Sensors: {prox_values[i]}", sep="")
-                        print("")
-
-                        for i in range(2):
-                            print(f"G Sensors: {ground_values[i]}", sep="")
-                        print("")
-
-                        # if sum(prox_values) > 20000:
-                        #     print("it should stop")
-                        #     node.v.motor.left.target = 0
-                        #     node.v.motor.right.target = 0
-                        #     break
-
-                        # if ground_values[0] < 500 or ground_values[1] < 500:
-                        #     print("Dark floor detected!")
-                        #     node.v.leds.bottom.left = [32, 0, 0]  # Red LED for left sensor
-                        #     node.v.leds.bottom.right = [32, 0, 0]  # Red LED for right sensor
-                        # else:
-                        #     node.v.leds.bottom.left = [0, 32, 0]  # Green LED
-                        #     node.v.leds.bottom.right = [0, 32, 0]  # Green LED
-
                         speeds = behaviorOA(prox_values)
                         node.v.motor.left.target = speeds[1]
                         node.v.motor.right.target = speeds[0]
@@ -91,8 +65,8 @@ class ThymioController:
 
                     # Once out of the loop, stop the robot and set the top LED to red.
                     print("Thymio stopped successfully!")
-                    # node.v.motor.left.target = 0
-                    # node.v.motor.right.target = 0
+                    node.v.motor.left.target = 0
+                    node.v.motor.right.target = 0
                     node.v.leds.top = [32, 0, 0]
                     node.flush()
 
