@@ -18,13 +18,16 @@ Setup:
     flatpak run --command=thymio-device-manager org.mobsya.ThymioSuite
 4. Once the device manager is running, execute this script to initiate the obstacle avoidance behavior of the Thymio robot.
 """
+import time
+import  threading
 
 from tdmclient import ClientAsync
 
 
 class ThymioController:
     def __init__(self):
-        pass
+        self.thread = threading.Thread(target=self.run_background, daemon=True)
+        self.thread.start()
 
     def run_background(self):
         def behaviorOA(prox_values):
@@ -79,4 +82,11 @@ class ThymioController:
 if __name__ == "__main__":
     # Instantiate the ThymioController class, which initializes and starts the robot's behavior.
     controller = ThymioController()
-    controller.run_background()
+    time.sleep(3)
+    print("ok1")
+    time.sleep(3)
+    print("ok2")
+    time.sleep(3)
+    print("ok3")
+    time.sleep(3)
+    print("ok4")
