@@ -1,54 +1,18 @@
-"""
-Thymio Obstacle Avoidance Controller
-
-This project utilizes the tdmclient library to control a Thymio robot. Specifically,
-it makes use of the asynchronous client provided by the library to handle real-time reactions and non-blocking behaviors of the robot.
-
-Important:
-- The tdmclient library offers multiple ways of interacting with Thymio robots, both synchronously and asynchronously.
-- The library provides capabilities to execute code both on the Thymio robot itself and on external platforms like a Raspberry Pi.
-- This current implementation is based on polling the sensors continuously.
-    However, for more advanced use-cases, users might want to design the code to be event-driven, reacting to specific triggers or states,
-     which can offer more efficient and responsive behaviors.
-
-Setup:
-1. Ensure the Thymio robot is connected and powered on.
-2. Ensure all required dependencies, including the tdmclient library, are installed.
-3. Before running this script, make sure to start the Thymio device manager by executing the following command in the terminal:
-    flatpak run --command=thymio-device-manager org.mobsya.ThymioSuite
-4. Once the device manager is running, execute this script to initiate the obstacle avoidance behavior of the Thymio robot.
-"""
 import time
 import  threading
-
 from tdmclient import ClientAsync
 
 
 class ThymioController:
     def __init__(self):
+        self.motor_values = [0, 0]  # Default motor values
+        self.led_values = [0, 0, 0]  # Default LED values
+        self.running = True
+        # Start the background thread that will run the Thymio control loop
         self.thread = threading.Thread(target=self.run_background, daemon=True)
         self.thread.start()
 
     def run_background(self):
-        def behaviorOA(prox_values):
-            """
-            Obstacle avoidance behavior function.
-            Given the proximity sensor values, it determines the Thymio's motion.
-            """
-
-            # If an object is detected in front
-            if prox_values[2] > 1500:
-                return -100, -100
-            # If an object is detected on the left
-            elif prox_values[0] > 1000:
-                return -100, 100
-            # If an object is detected on the right
-            elif prox_values[4] > 1000:
-                return 100, -100
-            # If no object is detected, move forward
-            else:
-                return 100, 100
-
         # Use the ClientAsync context manager to handle the connection to the Thymio robot.
         with ClientAsync() as client:
             async def prog():
@@ -59,14 +23,15 @@ class ThymioController:
 
                     node.send_set_variables({"leds.top": [0, 0, 32]})
                     print("Thymio started successfully!")
-                    while True:
-                        prox_values = node.v.prox.horizontal
-                        speeds = behaviorOA(prox_values)
-                        node.v.motor.left.target = speeds[1]
-                        node.v.motor.right.target = speeds[0]
-                        node.flush()  # Send the set commands to the robot.
-
-                        await client.sleep(0.3)  # Pause for 0.3 seconds before the next iteration.
+                    while self.running:
+                        # Apply the latest motor and LED values
+                        node.v.motor.left.target = self.motor_values[0]
+                        node.v.motor.right.target = self.motor_values[1]
+                        node.v.leds.top = self.led_values
+                        # Apply changes to the Thymio
+                        node.flush()
+                        # Sleep for 0.1 seconds to prevent overloading
+                        time.sleep(0.3)
 
                     # Once out of the loop, stop the robot and set the top LED to red.
                     print("Thymio stopped successfully!")
@@ -78,15 +43,76 @@ class ThymioController:
             # Run the asynchronous function to control the Thymio.
             client.run_async_program(prog)
 
+    def set_motors(self, values):
+        self.motor_values = values
+
+    def set_led(self, values):
+        self.led_values = values
+
+    def stop(self):
+        self.running = False
+        self.thread.join()
+
+    def perform_action(self, action: str):
+        if action == "LEFT":
+            self.set_motors([50, -50])
+        if action == "RIGHT":
+            self.set_motors([-50, 50])
+        if action == "FORWARD":
+            self.set_motors([50, 50])
+        if action == "STOP":
+            self.set_motors([0, 0])
+        else:
+            print("Invalid action!")
+            self.set_motors([0, 0])
+
+def test1():
+    print("Motors set to [100, -100]")
+    controller.set_motors([100, -100])
+    time.sleep(1)
+
+    print("Motors set to [-100, 100]")
+    controller.set_motors([-100, 100])
+    time.sleep(1)
+
+    print("Motors set to [50, -50]")
+    controller.set_motors([50, -50])
+    time.sleep(1)
+
+    print("Motors set to [-50, 50]")
+    controller.set_motors([-50, 50])
+    time.sleep(1)
+
+    print("Motors set to [50, 50]")
+    controller.set_motors([50, 50])
+    time.sleep(1)
+
+
+def test2():
+    print("Turn Right")
+    controller.perform_action("RIGHT")
+    time.sleep(1)
+
+    print("Turn Left")
+    controller.perform_action("LEFT")
+    time.sleep(1)
+
 
 if __name__ == "__main__":
-    # Instantiate the ThymioController class, which initializes and starts the robot's behavior.
     controller = ThymioController()
-    time.sleep(3)
-    print("ok1")
-    time.sleep(3)
-    print("ok2")
-    time.sleep(3)
-    print("ok3")
-    time.sleep(3)
-    print("ok4")
+
+    print("LED set to green")
+    controller.set_led([0, 32, 0])  # Set the LED to green
+    time.sleep(1)
+
+    # RUN TEST
+    test1()
+    # todo: run test2
+
+    print("LED set to yellow")
+    controller.set_led([32, 32, 0])  # Set the LED to yellow
+    time.sleep(1)
+
+    # Stop the controller when done
+    controller.stop()
+    print("Controller stopped")
