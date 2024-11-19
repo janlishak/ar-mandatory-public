@@ -55,13 +55,13 @@ class ThymioController:
 
     def perform_action(self, action: str):
         if action == "LEFT":
-            self.set_motors([50, -50])
+            self.set_motors([-100, 100])
             return
         if action == "RIGHT":
-            self.set_motors([-50, 50])
+            self.set_motors([100, -100])
             return
         if action == "FORWARD":
-            self.set_motors([50, 50])
+            self.set_motors([100, 100])
             return
         if action == "STOP":
             self.set_motors([0, 0])
@@ -98,6 +98,10 @@ def test2():
 
     print("Turn Left")
     controller.perform_action("LEFT")
+    time.sleep(1)
+    
+    print("Forward")
+    controller.perform_action("FORWARD")
     time.sleep(1)
 
 
