@@ -3,7 +3,7 @@ import cv2
 import time
 
 
-class ComputerCamera:
+class ThymioCamera:
     def __init__(self) -> None:
         self.camera = Picamera2()
         camera_config = self.camera.create_still_configuration({
