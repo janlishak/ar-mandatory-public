@@ -17,42 +17,41 @@ class ThymioController:
     def run_background(self):
         # Use the ClientAsync context manager to handle the connection to the Thymio robot.
         with ClientAsync() as client:
-            with ClientAsync() as client:
-                async def prog():
-                    with await client.lock() as node:
+            async def prog():
+                with await client.lock() as node:
 
-                        # Wait for the robot's proximity sensors to be ready.
-                        await node.wait_for_variables({"prox.horizontal"})
-                        await node.wait_for_variables({"prox.ground"})
+                    # Wait for the robot's proximity sensors to be ready.
+                    await node.wait_for_variables({"prox.horizontal"})
+                    await node.wait_for_variables({"prox.ground"})
 
-                        node.send_set_variables({"leds.top": [0, 0, 32]})
-                        print("Thymio started successfully!")
-                        while self.running:
-                            # Apply the latest motor and LED values
-                            node.v.motor.left.target = self.motor_values[0]
-                            node.v.motor.right.target = self.motor_values[1]
-                            node.v.leds.top = self.led_values
-                            node.v.leds.bottom.left = self.led_values
-                            node.v.leds.bottom.right = self.led_values
-                            # Pass the sensors to the robot
-                            self.horizontal_sensors = node.v.prox.horizontal
-                            self.ground_sensors = node.v.prox.ground.reflected
-                            # Apply changes to the Thymio
-                            node.flush()
-                            # Sleep for 0.1 seconds to prevent overloading
-                            time.sleep(0.3)
-                            # Testing explore
-                            self.explore()
-
-                        # Once out of the loop, stop the robot and set the top LED to red.
-                        print("Thymio stopped successfully!")
-                        node.v.motor.left.target = 0
-                        node.v.motor.right.target = 0
-                        node.v.leds.top = [32, 0, 0]
+                    node.send_set_variables({"leds.top": [0, 0, 32]})
+                    print("Thymio started successfully!")
+                    while self.running:
+                        # Apply the latest motor and LED values
+                        node.v.motor.left.target = self.motor_values[0]
+                        node.v.motor.right.target = self.motor_values[1]
+                        node.v.leds.top = self.led_values
+                        node.v.leds.bottom.left = self.led_values
+                        node.v.leds.bottom.right = self.led_values
+                        # Pass the sensors to the robot
+                        self.horizontal_sensors = node.v.prox.horizontal
+                        self.ground_sensors = node.v.prox.ground.reflected
+                        # Apply changes to the Thymio
                         node.flush()
+                        # Sleep for 0.1 seconds to prevent overloading
+                        time.sleep(0.3)
+                        # Testing explore
+                        self.explore()
 
-                # Run the asynchronous function to control the Thymio.
-                client.run_async_program(prog)
+                    # Once out of the loop, stop the robot and set the top LED to red.
+                    print("Thymio stopped successfully!")
+                    node.v.motor.left.target = 0
+                    node.v.motor.right.target = 0
+                    node.v.leds.top = [32, 0, 0]
+                    node.flush()
+
+            # Run the asynchronous function to control the Thymio.
+            client.run_async_program(prog)
 
     def set_motors(self, values):
         self.motor_values = values
