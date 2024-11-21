@@ -21,120 +21,121 @@ class ThymioController:
         self.thread = threading.Thread(target=self.run_background, daemon=True)
         self.thread.start()
 
-    def run_background(self):
-        # Use the ClientAsync context manager to handle the connection to the Thymio robot.
-        with ClientAsync() as client:
-            async def prog():
-                with await client.lock() as node:
+    with ClientAsync() as client:
+        def run_background(self):
+            # Use the ClientAsync context manager to handle the connection to the Thymio robot.
+            with ClientAsync() as client:
+                async def prog():
+                    with await client.lock() as node:
 
-                    # Wait for the robot's proximity sensors to be ready.
-                    await node.wait_for_variables({"prox.horizontal"})
-                    await node.wait_for_variables({"prox.ground"})
+                        # Wait for the robot's proximity sensors to be ready.
+                        await node.wait_for_variables({"prox.horizontal"})
+                        await node.wait_for_variables({"prox.ground"})
 
-                    node.send_set_variables({"leds.top": [0, 0, 32]})
-                    print("Thymio started successfully!")
-                    while self.running:
-                        # Apply the latest motor and LED values
-                        node.v.motor.left.target = self.motor_values[0]
-                        node.v.motor.right.target = self.motor_values[1]
-                        node.v.leds.top = self.led_values
-                        node.v.leds.bottom.left = self.led_values
-                        node.v.leds.bottom.right = self.led_values
-                        # Pass the sensors to the robot
-                        self.horizontal_sensors = node.v.prox.horizontal
-                        self.ground_sensors = node.v.prox.ground.reflected
-                        # Apply changes to the Thymio
+                        node.send_set_variables({"leds.top": [0, 0, 32]})
+                        print("Thymio started successfully!")
+                        while self.running:
+                            # Apply the latest motor and LED values
+                            node.v.motor.left.target = self.motor_values[0]
+                            node.v.motor.right.target = self.motor_values[1]
+                            node.v.leds.top = self.led_values
+                            node.v.leds.bottom.left = self.led_values
+                            node.v.leds.bottom.right = self.led_values
+                            # Pass the sensors to the robot
+                            self.horizontal_sensors = node.v.prox.horizontal
+                            self.ground_sensors = node.v.prox.ground.reflected
+                            # Apply changes to the Thymio
+                            node.flush()
+                            # Sleep for 0.1 seconds to prevent overloading
+                            time.sleep(0.3)
+                            # Testing explore
+                            self.explore()
+
+                        # Once out of the loop, stop the robot and set the top LED to red.
+                        print("Thymio stopped successfully!")
+                        node.v.motor.left.target = 0
+                        node.v.motor.right.target = 0
+                        node.v.leds.top = [32, 0, 0]
                         node.flush()
-                        # Sleep for 0.1 seconds to prevent overloading
-                        time.sleep(0.3)
-                        # Testing explore
-                        self.explore()
 
-                    # Once out of the loop, stop the robot and set the top LED to red.
-                    print("Thymio stopped successfully!")
-                    node.v.motor.left.target = 0
-                    node.v.motor.right.target = 0
-                    node.v.leds.top = [32, 0, 0]
-                    node.flush()
+                # Run the asynchronous function to control the Thymio.
+                client.run_async_program(prog)
 
-            # Run the asynchronous function to control the Thymio.
-            client.run_async_program(prog)
+        def set_motors(self, values):
+            self.motor_values = values
 
-    def set_motors(self, values):
-        self.motor_values = values
+        def set_led(self, values):
+            self.led_values = values
 
-    def set_led(self, values):
-        self.led_values = values
+        def stop(self):
+            self.running = False
+            self.thread.join()
 
-    def stop(self):
-        self.running = False
-        self.thread.join()
+        def perform_action(self, action: str, speed: int=100):
+            # Keep speed within motor ranges
+            if speed > 500:
+                speed = 500
+            elif speed < -500:
+                speed = -500
 
-    def perform_action(self, action: str, speed: int=100):
-        # Keep speed within motor ranges
-        if speed > 500:
-            speed = 500
-        elif speed < -500:
-            speed = -500
-
-        if action == "LEFT":
-            self.set_motors([-speed, speed])
-            return
-        if action == "RIGHT":
-            self.set_motors([speed, -speed])
-            return
-        if action == "FORWARD":
-            self.set_motors([speed, speed])
-            return
-        if action == "STOP":
-            self.set_motors([0, 0])
-        else:
-            print("Invalid action!")
-            self.set_motors([0, 0])
-
-
-    async def explore(self):
-
-        whereami = self.detect_surface()
-
-        print(f"I am here {whereami}")
-
-        if whereami == "safe-zone":
-            self.perform_action("STOP")
-        elif whereami == "safe-zone-left":
-            self.perform_action("LEFT", 50)
-        elif whereami == "safe-zone-right":
-            self.perform_action("RIGHT", 50)
-        elif whereami == "black-tape":
-            self.perform_action("LEFT", 250)
-        elif whereami == "black-tape-left":
-            self.perform_action("RIGHT", 150)
-        elif whereami == "black-tape-right":
-            self.perform_action("LEFT", 150)
-        else: ## JUST MOVE AHEAD
-            self.perform_action("FORWARD", 500)
-
-            
-
-    async def detect_surface(self):
-        async with self.client.lock:
-            self.ground_sensors = self.thymio["prox.ground.reflected"]
-
-            ## First, check where you are standing
-            if (self.ground_sensors[0] > 900) & (self.ground_sensors[1] > 900): # Safe zone
-                return "safe-zone"
-            elif (self.ground_sensors[0] > 900): # Safe zone to the left
-                return "safe-zone-left"
-            elif (self.ground_sensors[1] > 900):
-                return "safe-zone-right"
-            elif (self.ground_sensors[0] < 400) & (self.ground_sensors[1] < 400): # Black tape
-                return "black-tape"
-            elif (self.ground_sensors[0] < 400):
-                return "black-tape-left"
-            elif (self.ground_sensors[0] < 400):
-                return "black-tape-right"
+            if action == "LEFT":
+                self.set_motors([-speed, speed])
+                return
+            if action == "RIGHT":
+                self.set_motors([speed, -speed])
+                return
+            if action == "FORWARD":
+                self.set_motors([speed, speed])
+                return
+            if action == "STOP":
+                self.set_motors([0, 0])
             else:
-                return "open-ground"
+                print("Invalid action!")
+                self.set_motors([0, 0])
+
+
+        async def explore(self):
+
+            whereami = self.detect_surface()
+
+            print(f"I am here {whereami}")
+
+            if whereami == "safe-zone":
+                self.perform_action("STOP")
+            elif whereami == "safe-zone-left":
+                self.perform_action("LEFT", 50)
+            elif whereami == "safe-zone-right":
+                self.perform_action("RIGHT", 50)
+            elif whereami == "black-tape":
+                self.perform_action("LEFT", 250)
+            elif whereami == "black-tape-left":
+                self.perform_action("RIGHT", 150)
+            elif whereami == "black-tape-right":
+                self.perform_action("LEFT", 150)
+            else: ## JUST MOVE AHEAD
+                self.perform_action("FORWARD", 500)
+
+                
+
+        async def detect_surface(self):
+            async with self.client.lock:
+                self.ground_sensors = self.thymio["prox.ground.reflected"]
+
+                ## First, check where you are standing
+                if (self.ground_sensors[0] > 900) & (self.ground_sensors[1] > 900): # Safe zone
+                    return "safe-zone"
+                elif (self.ground_sensors[0] > 900): # Safe zone to the left
+                    return "safe-zone-left"
+                elif (self.ground_sensors[1] > 900):
+                    return "safe-zone-right"
+                elif (self.ground_sensors[0] < 400) & (self.ground_sensors[1] < 400): # Black tape
+                    return "black-tape"
+                elif (self.ground_sensors[0] < 400):
+                    return "black-tape-left"
+                elif (self.ground_sensors[0] < 400):
+                    return "black-tape-right"
+                else:
+                    return "open-ground"
 
 
 def test1():
