@@ -41,26 +41,26 @@ for best performing robots. Handin of a group report documenting your project th
 
 ### Stage 1: Make it move.
 
-- Identify each sensor on the thymio bot w.r.t. actual position etc
-- Identify distance sensors detect other robots - thymio docs suggest 15cm, but seems it can be tagged up to 29cm??
-- Get baseline sensor readings. When we have an environment, these should be logged as the bot moves around to finetune.
+- [x] Identify each sensor on the thymio bot w.r.t. actual position etc
+- [x] Identify distance sensors detect other robots - thymio docs suggest 15cm, but seems it can be tagged up to 29cm??
+- [x] Get baseline sensor readings. When we have an environment, these should be logged as the bot moves around to finetune.
 	- black < 70
 	- shiny > 800
 	- base  > 400
-- Update obstacle avoidance code for this environment
-- Rewrite provided code to avoid using async
+- [ ] Update obstacle avoidance code for this environment
+- [ ] Rewrite provided code to avoid using async
 
-End of stage 1: A robot that can move around the environment, staying within the border.
+- [ ] End of stage 1: A robot that can move around the environment, staying within the border.
 
 ### Stage 2: Make it aware.
 
-- Use camera to detect other robots
-- Camera to detect colour (-> status) of other robots
-- Seeker behaviour: search for untagged robots
-- Avoider behaviour: avoid seeker bot
+- [ ] Use camera to detect other robots
+- [ ] Camera to detect colour (-> status) of other robots
+- [ ] Seeker behaviour: search for untagged robots
+- [ ] Avoider behaviour: avoid seeker bot
 
-End of stage 2: robot that can meet the task requirement in the most basic way
+- [ ] End of stage 2: robot that can meet the task requirement in the most basic way
 
 ### Stage 3: Make it learn.
 
-- Use q-learning/evolutionary learning(?) for some aspect of its behaviour.
+- [ ] Use q-learning/evolutionary learning(?) for some aspect of its behaviour.
