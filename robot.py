@@ -11,8 +11,8 @@ class ThymioController:
         self.horizontal_sensors = None
         self.ground_sensors = None
         # Start the background thread that will run the Thymio control loop
-        self.thread = threading.Thread(target=self.run_background, daemon=True)
-        self.thread.start()
+        #self.thread = threading.Thread(target=self.run_background, daemon=True)
+        #self.thread.start()
 
     def run_background(self):
         # Use the ClientAsync context manager to handle the connection to the Thymio robot.
