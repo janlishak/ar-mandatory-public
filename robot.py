@@ -169,21 +169,25 @@ def test3():
     time.sleep(3)
 
 
+def test4():
+    controller.run_background()
+
+
 if __name__ == "__main__":
     controller = ThymioController()
 
-    print("LED set to green")
-    controller.set_led([0, 32, 0])  # Set the LED to green
-    time.sleep(2)
+    #print("LED set to green")
+    #controller.set_led([0, 32, 0])  # Set the LED to green
+    #time.sleep(2)
 
     # RUN TEST
     # test1()
     # todo: run test2
-    test2()
+    test4()
 
-    print("LED set to yellow")
-    controller.set_led([32, 32, 0])  # Set the LED to yellow
-    time.sleep(1)
+    #print("LED set to yellow")
+    #controller.set_led([32, 32, 0])  # Set the LED to yellow
+    #time.sleep(1)
 
     # Stop the controller when done
     controller.stop()
