@@ -1,13 +1,17 @@
 import time
 import  threading
 from tdmclient import ClientAsync
-from aseba import Thymio
-
 
 
 class ThymioController:
     def __init__(self):
-        self.thymio = Thymio()
+        self.client = ClientAsync()
+        self.node = None
+        self.client.run_async(self.connect())
+        async def connect(self):
+            async with self.client.lock:
+                self.node = await self.client.wait_for_node()
+                print("Connected to Thymio")
         self.motor_values = [0, 0]  # Default motor values
         self.led_values = [0, 0, 0]  # Default LED values
         self.running = True
@@ -89,7 +93,7 @@ class ThymioController:
             self.set_motors([0, 0])
 
 
-    def explore(self):
+    async def explore(self):
 
         whereami = self.detect_surface()
 
@@ -112,25 +116,25 @@ class ThymioController:
 
             
 
-    def detect_surface(self):
-        
-        self.ground_sensors = self.thymio["prox.ground.reflected"]
+    async def detect_surface(self):
+        async with self.client.lock:
+            self.ground_sensors = self.thymio["prox.ground.reflected"]
 
-        ## First, check where you are standing
-        if (self.ground_sensors[0] > 900) & (self.ground_sensors[1] > 900): # Safe zone
-            return "safe-zone"
-        elif (self.ground_sensors[0] > 900): # Safe zone to the left
-            return "safe-zone-left"
-        elif (self.ground_sensors[1] > 900):
-            return "safe-zone-right"
-        elif (self.ground_sensors[0] < 400) & (self.ground_sensors[1] < 400): # Black tape
-            return "black-tape"
-        elif (self.ground_sensors[0] < 400):
-            return "black-tape-left"
-        elif (self.ground_sensors[0] < 400):
-            return "black-tape-right"
-        else:
-            return "open-ground"
+            ## First, check where you are standing
+            if (self.ground_sensors[0] > 900) & (self.ground_sensors[1] > 900): # Safe zone
+                return "safe-zone"
+            elif (self.ground_sensors[0] > 900): # Safe zone to the left
+                return "safe-zone-left"
+            elif (self.ground_sensors[1] > 900):
+                return "safe-zone-right"
+            elif (self.ground_sensors[0] < 400) & (self.ground_sensors[1] < 400): # Black tape
+                return "black-tape"
+            elif (self.ground_sensors[0] < 400):
+                return "black-tape-left"
+            elif (self.ground_sensors[0] < 400):
+                return "black-tape-right"
+            else:
+                return "open-ground"
 
 
 def test1():
