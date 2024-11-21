@@ -7,7 +7,6 @@ class ThymioController:
     def __init__(self):
         self.client = ClientAsync()
         self.node = None
-        self.client.run_async(self.connect())
         async def connect(self):
             async with self.client.lock:
                 self.node = await self.client.wait_for_node()
