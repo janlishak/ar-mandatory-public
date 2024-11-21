@@ -27,7 +27,7 @@ class ThymioController:
                     print("Thymio started successfully!")
                     while self.running:
                         # Testing explore
-                        self.explore()
+                        # self.explore()
                         # Apply the latest motor and LED values
                         node.v.motor.left.target = self.motor_values[0]
                         node.v.motor.right.target = self.motor_values[1]
