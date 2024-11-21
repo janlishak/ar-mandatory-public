@@ -88,7 +88,11 @@ class ThymioController:
 
     def explore(self):
 
+        print("This")
+
         with ClientAsync() as client:
+
+            print("That")
 
             async def prog():
                 """
@@ -97,6 +101,8 @@ class ThymioController:
 
                 # Lock the node representing the Thymio to ensure exclusive access.
                 with await client.lock() as node:
+
+                    print("The other")
                     
                     # Wait for the robot's proximity sensors to be ready.
                     await node.wait_for_variables({"prox.horizontal"})
