@@ -26,6 +26,8 @@ class ThymioController:
                     node.send_set_variables({"leds.top": [0, 0, 32]})
                     print("Thymio started successfully!")
                     while self.running:
+                        # Testing explore
+                        self.explore()
                         # Apply the latest motor and LED values
                         node.v.motor.left.target = self.motor_values[0]
                         node.v.motor.right.target = self.motor_values[1]
