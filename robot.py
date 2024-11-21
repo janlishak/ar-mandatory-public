@@ -11,8 +11,8 @@ class ThymioController:
         self.horizontal_sensors = None
         self.ground_sensors = None
         # Start the background thread that will run the Thymio control loop
-        self.thread = threading.Thread(target=self.run_background, daemon=True)
-        self.thread.start()
+        #self.thread = threading.Thread(target=self.run_background, daemon=True)
+        #self.thread.start()
 
     def run_background(self):
         # Use the ClientAsync context manager to handle the connection to the Thymio robot.
@@ -22,12 +22,11 @@ class ThymioController:
 
                     # Wait for the robot's proximity sensors to be ready.
                     await node.wait_for_variables({"prox.horizontal"})
+                    await node.wait_for_variables({"prox.ground"})
 
                     node.send_set_variables({"leds.top": [0, 0, 32]})
                     print("Thymio started successfully!")
                     while self.running:
-                        # Testing explore
-                        # self.explore()
                         # Apply the latest motor and LED values
                         node.v.motor.left.target = self.motor_values[0]
                         node.v.motor.right.target = self.motor_values[1]
@@ -41,6 +40,8 @@ class ThymioController:
                         node.flush()
                         # Sleep for 0.1 seconds to prevent overloading
                         time.sleep(0.3)
+                        # Testing explore
+                        self.explore()
 
                     # Once out of the loop, stop the robot and set the top LED to red.
                     print("Thymio stopped successfully!")
@@ -88,6 +89,8 @@ class ThymioController:
     def explore(self):
 
         whereami = self.detect_surface()
+
+        print(f"I am here {whereami}")
 
         if whereami == "safe-zone":
             self.perform_action("STOP")
@@ -166,21 +169,25 @@ def test3():
     time.sleep(3)
 
 
+def test4():
+    controller.run_background()
+
+
 if __name__ == "__main__":
     controller = ThymioController()
 
-    print("LED set to green")
-    controller.set_led([0, 32, 0])  # Set the LED to green
-    time.sleep(2)
+    #print("LED set to green")
+    #controller.set_led([0, 32, 0])  # Set the LED to green
+    #time.sleep(2)
 
     # RUN TEST
     # test1()
     # todo: run test2
-    test2()
+    test4()
 
-    print("LED set to yellow")
-    controller.set_led([32, 32, 0])  # Set the LED to yellow
-    time.sleep(1)
+    #print("LED set to yellow")
+    #controller.set_led([32, 32, 0])  # Set the LED to yellow
+    #time.sleep(1)
 
     # Stop the controller when done
     controller.stop()
