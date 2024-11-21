@@ -89,59 +89,58 @@ class ThymioController:
     def explore(self):
 
         with ClientAsync() as client:
-            with ClientAsync() as client:
 
-                async def prog():
-                    """
-                    Asynchronous function controlling the Thymio.
-                    """
+            async def prog():
+                """
+                Asynchronous function controlling the Thymio.
+                """
 
-                    # Lock the node representing the Thymio to ensure exclusive access.
-                    with await client.lock() as node:
-                        
-                        # Wait for the robot's proximity sensors to be ready.
-                        await node.wait_for_variables({"prox.horizontal"})
-                        print("Thymio started successfully!")
-                        i=0
-                        while i < 20:
-                            # get the values of the proximity sensors
-                            self.horizontal_sensors = node.v.prox.horizontal
-                            self.ground_sensors = node.v.prox.ground.reflected
+                # Lock the node representing the Thymio to ensure exclusive access.
+                with await client.lock() as node:
+                    
+                    # Wait for the robot's proximity sensors to be ready.
+                    await node.wait_for_variables({"prox.horizontal"})
+                    print("Thymio started successfully!")
+                    i=0
+                    while i < 20:
+                        # get the values of the proximity sensors
+                        self.horizontal_sensors = node.v.prox.horizontal
+                        self.ground_sensors = node.v.prox.ground.reflected
 
-                            whereami = self.detect_surface()
+                        whereami = self.detect_surface()
 
-                            print(f"I am here {whereami}")
+                        print(f"I am here {whereami}")
 
-                            if whereami == "safe-zone":
-                                self.perform_action("STOP")
-                            elif whereami == "safe-zone-left":
-                                self.perform_action("LEFT", 50)
-                            elif whereami == "safe-zone-right":
-                                self.perform_action("RIGHT", 50)
-                            elif whereami == "black-tape":
-                                self.perform_action("LEFT", 250)
-                            elif whereami == "black-tape-left":
-                                self.perform_action("RIGHT", 150)
-                            elif whereami == "black-tape-right":
-                                self.perform_action("LEFT", 150)
-                            else: ## JUST MOVE AHEAD
-                                self.perform_action("FORWARD", 500)
+                        if whereami == "safe-zone":
+                            self.perform_action("STOP")
+                        elif whereami == "safe-zone-left":
+                            self.perform_action("LEFT", 50)
+                        elif whereami == "safe-zone-right":
+                            self.perform_action("RIGHT", 50)
+                        elif whereami == "black-tape":
+                            self.perform_action("LEFT", 250)
+                        elif whereami == "black-tape-left":
+                            self.perform_action("RIGHT", 150)
+                        elif whereami == "black-tape-right":
+                            self.perform_action("LEFT", 150)
+                        else: ## JUST MOVE AHEAD
+                            self.perform_action("FORWARD", 500)
 
-                            node.flush()  # Send the set commands to the robot.
+                        node.flush()  # Send the set commands to the robot.
 
-                            await client.sleep(0.3)  # Pause for 0.3 seconds before the next iteration.
-                            i +=1
+                        await client.sleep(0.3)  # Pause for 0.3 seconds before the next iteration.
+                        i +=1
 
-                        # Once out of the loop, stop the robot and set the top LED to red.
-                        print("Thymio stopped successfully!")
-                        node.v.motor.left.target = 0
-                        node.v.motor.right.target = 0
-                        node.v.leds.top = [32, 0, 0]
-                        node.flush()
+                    # Once out of the loop, stop the robot and set the top LED to red.
+                    print("Thymio stopped successfully!")
+                    node.v.motor.left.target = 0
+                    node.v.motor.right.target = 0
+                    node.v.leds.top = [32, 0, 0]
+                    node.flush()
 
 
-                # Run the asynchronous function to control the Thymio.
-                client.run_async_program(prog)
+            # Run the asynchronous function to control the Thymio.
+            client.run_async_program(prog)
 
             
 
