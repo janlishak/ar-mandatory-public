@@ -105,6 +105,11 @@ def test2():
     time.sleep(1)
 
 
+def test3():
+    controller.set_motors([200, 200])
+    time.sleep(3)
+
+
 if __name__ == "__main__":
     controller = ThymioController()
 
