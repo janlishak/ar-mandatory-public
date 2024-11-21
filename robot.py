@@ -22,12 +22,11 @@ class ThymioController:
 
                     # Wait for the robot's proximity sensors to be ready.
                     await node.wait_for_variables({"prox.horizontal"})
+                    await node.wait_for_variables({"prox.ground"})
 
                     node.send_set_variables({"leds.top": [0, 0, 32]})
                     print("Thymio started successfully!")
                     while self.running:
-                        # Testing explore
-                        # self.explore()
                         # Apply the latest motor and LED values
                         node.v.motor.left.target = self.motor_values[0]
                         node.v.motor.right.target = self.motor_values[1]
@@ -41,6 +40,8 @@ class ThymioController:
                         node.flush()
                         # Sleep for 0.1 seconds to prevent overloading
                         time.sleep(0.3)
+                        # Testing explore
+                        self.explore()
 
                     # Once out of the loop, stop the robot and set the top LED to red.
                     print("Thymio stopped successfully!")
@@ -88,6 +89,8 @@ class ThymioController:
     def explore(self):
 
         whereami = self.detect_surface()
+
+        print(f"I am here {whereami}")
 
         if whereami == "safe-zone":
             self.perform_action("STOP")
