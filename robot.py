@@ -4,12 +4,13 @@ from tdmclient import ClientAsync
 
 
 class ThymioController:
-    def __init__(self):
+    def __init__(self, role="avoider"):
         self.motor_values = [0, 0]  # Default motor values
         self.led_values = [0, 0, 0]  # Default LED values
         self.running = True
         self.horizontal_sensors = None
         self.ground_sensors = None
+        self.role = role
         # Start the background thread that will run the Thymio control loop
         self.thread = threading.Thread(target=self.run_background, daemon=True)
         self.thread.start()
@@ -37,6 +38,10 @@ class ThymioController:
                         # Pass the sensors to the robot
                         self.horizontal_sensors = node.v.prox.horizontal
                         self.ground_sensors = node.v.prox.ground.reflected
+
+                        #get IR message
+                        self.message = node.v.prox.comm.rx
+
                         # Apply changes to the Thymio
                         node.flush()
                         # Sleep for 0.1 seconds to prevent overloading
@@ -59,6 +64,26 @@ class ThymioController:
 
     def set_led(self, values):
         self.led_values = values
+
+    def set_status(self):
+        surface = self.detect_surface()
+        if self.role == "avoider":
+            if self.message == 1:
+                #if caught by seeker, embarrassed and game over.
+                self.status = "embarrassed"
+                self.stop()
+            elif self.message == 2 and surface == "safe-zone":
+                    #bumped out of safe zone
+                    self.status == "normal"
+                    #need to add countdown here
+            elif surface == "safe-zone":
+                self.status = "safe"
+            else:
+                self.status = "normal"
+
+        else: self.status == "seeking" #seekers only seek
+
+        return self.status
 
     def stop(self):
         self.running = False
@@ -108,11 +133,7 @@ class ThymioController:
         else: ## JUST MOVE AHEAD
             self.perform_action("FORWARD", 500)
 
-            
-
-    def detect_surface(self):
-        
-        self.ground_sensors = self.thymio["prox.ground.reflected"]
+    def detect_surface(self):    
 
         ## First, check where you are standing
         if (self.ground_sensors[0] > 900) & (self.ground_sensors[1] > 900): # Safe zone
