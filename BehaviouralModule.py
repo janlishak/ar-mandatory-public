@@ -102,7 +102,30 @@ class behaviouralModule:
                 if self.debug: print("No black line, no robots in front -> Moving forward.")
                 self.set_motor_speed(self.max_speed, self.max_speed)
                 pass
-        
+
+        elif self.robot_type == "avoider2":
+            # Line in front
+            if (ground_sensors < self.thresholds["black-line"]).all():
+                self.set_motor_speed(self.max_speed, -self.max_speed)
+                if self.debug: print("Black line in front -> Turning 180.")
+                return
+
+            # Black line to the left
+            if ground_sensors[0] < self.thresholds["black-line"]:
+                # Turn slightly to the right
+                if self.debug: print("Black line at left -> Turning right.")
+                self.set_motor_speed(self.max_speed, -self.max_speed)
+                return
+
+            # Black line to the right
+            if ground_sensors[1] < self.thresholds["black-line"]:
+                if self.debug: print("Black line at right -> Turning left.")
+                self.set_motor_speed(-self.max_speed, self.max_speed)
+                return
+            
+            # Just go Forward
+            self.set_motor_speed(self.max_speed, self.max_speed)
+
         else: # Then seeker
             ## CHECK FOR LINE ##
             # Line in front
