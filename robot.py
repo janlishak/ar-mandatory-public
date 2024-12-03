@@ -34,8 +34,10 @@ class ThymioController:
                         node.v.leds.bottom.left = self.led_values
                         node.v.leds.bottom.right = self.led_values
                         # Pass the sensors to the robot
-                        self.horizontal_sensors = node.v.prox.horizontal
-                        self.ground_sensors = node.v.prox.ground.reflected
+                        h = node.v.prox.horizontal
+                        self.horizontal_sensors = [h[0], h[1], h[2], h[3], h[4], h[5], h[6]]
+                        g = node.v.prox.ground.reflected
+                        self.ground_sensors = [g[0], g[1]]
                         # Apply changes to the Thymio
                         node.flush()
                         # Sleep for 0.1 seconds to prevent overloading
