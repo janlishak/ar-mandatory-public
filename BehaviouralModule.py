@@ -135,6 +135,9 @@ class behaviouralModule:
                 self.set_motor_speed(np.random.randint(0, self.max_speed), np.random.randint(0, self.max_speed))
                 pass
 
+            # Wait two secs
+            time.sleep()
+
 
 # b = behaviouralModule(debug=True)
 # 
