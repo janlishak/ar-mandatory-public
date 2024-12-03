@@ -39,6 +39,7 @@ class behaviouralModule:
         back_sensors = np.array(self.thymio.horizontal_sensors[5:])
         ground_sensors = np.array(self.thymio.ground_sensors)
         print(front_sensors)
+        return
         
         if self.robot_type == "avoider":
             ## CHECK FOR LINE ##
