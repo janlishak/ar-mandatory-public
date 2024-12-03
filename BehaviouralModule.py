@@ -18,7 +18,7 @@ class behaviouralModule:
     def __init__(self, thymio, max_speed=500, robot_threshold=100, thresholds={"robot": 1200, "black-line": 40, "safe-zone": 1200, "surface": 400}, debug=False, type="avoider"):
         self.max_speed = max_speed
         self.thymio = thymio
-        thymio.set_motors(0, 0) # Start stopped
+        thymio.set_motors([0,0])
         self.thresholds = thresholds
         self.debug = debug
         self.robot_type = type
@@ -27,7 +27,7 @@ class behaviouralModule:
     #     return self.motor_speed
     
     def set_motor_speed(self, left_motor, right_motor):
-        self.thymio.set_motors(left_motor, right_motor)
+        self.thymio.set_motors([left_motor, right_motor])
 
 
     def react(self, camera, signal):
