@@ -17,7 +17,7 @@ class behaviouralModule:
     def __init__(self,
                  thymio,
                  max_speed=80,
-                 thresholds={"robot": 1200, "black-line": 150, "safe-zone": 800, "front": 3000},
+                 thresholds={"robot": 1200, "black-line": 150, "safe-zone": 800, "front": 1600},
                  debug=False,
                  type="avoider"):
         self.max_speed = max_speed
@@ -38,8 +38,8 @@ class behaviouralModule:
         front_sensors = np.array(self.thymio.horizontal_sensors[:5])
         back_sensors = np.array(self.thymio.horizontal_sensors[5:])
         ground_sensors = np.array(self.thymio.ground_sensors)
-        print(front_sensors)
-        return
+        # print(front_sensors)
+        # return
         
         if self.robot_type == "avoider":
             ## CHECK FOR LINE ##
@@ -113,7 +113,7 @@ class behaviouralModule:
                 self.set_motor_speed(self.max_speed//2, -self.max_speed//2)
                 if self.debug: print("Black line in front -> Turning 180.")
                 self.last_collision_time = time.time()
-                time.sleep(1)
+                # time.sleep(1)
                 return
 
             # Black line to the left
