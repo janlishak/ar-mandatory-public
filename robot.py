@@ -1,16 +1,15 @@
 import time
-import  threading
+import threading
 from tdmclient import ClientAsync
 
 
 class ThymioController:
-    def __init__(self, role="avoider"):
+    def __init__(self):
         self.motor_values = [0, 0]  # Default motor values
         self.led_values = [0, 0, 0]  # Default LED values
         self.running = True
         self.horizontal_sensors = None
         self.ground_sensors = None
-        self.role = role
         # Start the background thread that will run the Thymio control loop
         self.thread = threading.Thread(target=self.run_background, daemon=True)
         self.thread.start()
@@ -20,15 +19,14 @@ class ThymioController:
         with ClientAsync() as client:
             async def prog():
                 with await client.lock() as node:
-
                     # Wait for the robot's proximity sensors to be ready.
                     await node.wait_for_variables({"prox.horizontal"})
-                    await node.wait_for_variables({"prox.ground"})
 
                     node.send_set_variables({"leds.top": [0, 0, 32]})
                     print("Thymio started successfully!")
-
                     while self.running:
+                        # Testing explore
+                        # self.explore()
                         # Apply the latest motor and LED values
                         node.v.motor.left.target = self.motor_values[0]
                         node.v.motor.right.target = self.motor_values[1]
@@ -38,16 +36,10 @@ class ThymioController:
                         # Pass the sensors to the robot
                         self.horizontal_sensors = node.v.prox.horizontal
                         self.ground_sensors = node.v.prox.ground.reflected
-
-                        #get IR message
-                        self.message = node.v.prox.comm.rx
-
                         # Apply changes to the Thymio
                         node.flush()
                         # Sleep for 0.1 seconds to prevent overloading
                         time.sleep(0.3)
-                        # Testing explore
-                        self.explore()
 
                     # Once out of the loop, stop the robot and set the top LED to red.
                     print("Thymio stopped successfully!")
@@ -65,31 +57,11 @@ class ThymioController:
     def set_led(self, values):
         self.led_values = values
 
-    def set_status(self):
-        surface = self.detect_surface()
-        if self.role == "avoider":
-            if self.message == 1:
-                #if caught by seeker, embarrassed and game over.
-                self.status = "embarrassed"
-                self.stop()
-            elif self.message == 2 and surface == "safe-zone":
-                    #bumped out of safe zone
-                    self.status == "normal"
-                    #need to add countdown here
-            elif surface == "safe-zone":
-                self.status = "safe"
-            else:
-                self.status = "normal"
-
-        else: self.status == "seeking" #seekers only seek
-
-        return self.status
-
     def stop(self):
         self.running = False
         self.thread.join()
 
-    def perform_action(self, action: str, speed: int=100):
+    def perform_action(self, action: str, speed: int = 100):
         # Keep speed within motor ranges
         if speed > 500:
             speed = 500
@@ -111,12 +83,9 @@ class ThymioController:
             print("Invalid action!")
             self.set_motors([0, 0])
 
-
     def explore(self):
 
         whereami = self.detect_surface()
-
-        print(f"I am here {whereami}")
 
         if whereami == "safe-zone":
             self.perform_action("STOP")
@@ -130,19 +99,20 @@ class ThymioController:
             self.perform_action("RIGHT", 150)
         elif whereami == "black-tape-right":
             self.perform_action("LEFT", 150)
-        else: ## JUST MOVE AHEAD
+        else:  ## JUST MOVE AHEAD
             self.perform_action("FORWARD", 500)
 
-    def detect_surface(self):    
+        return
 
+    def detect_surface(self):
         ## First, check where you are standing
-        if (self.ground_sensors[0] > 900) & (self.ground_sensors[1] > 900): # Safe zone
+        if (self.ground_sensors[0] > 900) & (self.ground_sensors[1] > 900):  # Safe zone
             return "safe-zone"
-        elif (self.ground_sensors[0] > 900): # Safe zone to the left
+        elif (self.ground_sensors[0] > 900):  # Safe zone to the left
             return "safe-zone-left"
         elif (self.ground_sensors[1] > 900):
             return "safe-zone-right"
-        elif (self.ground_sensors[0] < 400) & (self.ground_sensors[1] < 400): # Black tape
+        elif (self.ground_sensors[0] < 400) & (self.ground_sensors[1] < 400):  # Black tape
             return "black-tape"
         elif (self.ground_sensors[0] < 400):
             return "black-tape-left"
@@ -182,7 +152,7 @@ def test2():
     print("Turn Left")
     controller.perform_action("LEFT")
     time.sleep(1)
-    
+
     print("Forward")
     controller.perform_action("FORWARD")
     time.sleep(1)
@@ -193,25 +163,21 @@ def test3():
     time.sleep(3)
 
 
-def test4():
-    controller.run_background()
-
-
 if __name__ == "__main__":
     controller = ThymioController()
 
-    #print("LED set to green")
-    #controller.set_led([0, 32, 0])  # Set the LED to green
-    #time.sleep(2)
+    print("LED set to green")
+    controller.set_led([0, 32, 0])  # Set the LED to green
+    time.sleep(2)
 
     # RUN TEST
     # test1()
+    # todo: run test2
     test2()
-    # test4()
 
-    #print("LED set to yellow")
-    #controller.set_led([32, 32, 0])  # Set the LED to yellow
-    #time.sleep(1)
+    print("LED set to yellow")
+    controller.set_led([32, 32, 0])  # Set the LED to yellow
+    time.sleep(1)
 
     # Stop the controller when done
     controller.stop()
