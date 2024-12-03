@@ -15,7 +15,7 @@ class FakeCamera:
 
 class behaviouralModule:
 
-    def __init__(self, thymio, max_speed=500, robot_threshold=100, thresholds={"robot": 1200, "black-line": 40, "safe-zone": 1200, "surface": 400}, debug=False, type="avoider"):
+    def __init__(self, thymio, max_speed=500, robot_threshold=100, thresholds={"robot": 1200, "black-line": 150, "safe-zone": 800}, debug=False, type="avoider"):
         self.max_speed = max_speed
         self.thymio = thymio
         thymio.set_motors([0,0])
@@ -68,7 +68,7 @@ class behaviouralModule:
                 self.set_motor_speed(0, self.max_speed//2)
 
             # If we are in the safe zone, and not receiving a signal, stay there
-            if (ground_sensors).all() & (not signal):
+            if (ground_sensors > self.thresholds["safe-zone"]).all() & (not signal):
                 self.set_motor_speed(0, 0)
 
             ## ROBOTS BY CAMERA ##
