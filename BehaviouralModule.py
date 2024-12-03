@@ -15,7 +15,7 @@ class FakeCamera:
 
 class behaviouralModule:
 
-    def __init__(self, thymio, max_speed=500, robot_threshold=100, thresholds={"robot": 1200, "black-line": 150, "safe-zone": 800}, debug=False, type="avoider"):
+    def __init__(self, thymio, max_speed=80, robot_threshold=100, thresholds={"robot": 1200, "black-line": 150, "safe-zone": 800}, debug=False, type="avoider"):
         self.max_speed = max_speed
         self.thymio = thymio
         thymio.set_motors([0,0])
@@ -36,7 +36,6 @@ class behaviouralModule:
         ground_sensors = np.array(self.thymio.ground_sensors)
 
         print(ground_sensors)
-        return
         
         if self.robot_type == "avoider":
             ## CHECK FOR LINE ##
@@ -135,9 +134,6 @@ class behaviouralModule:
                 self.set_motor_speed(np.random.randint(0, self.max_speed), np.random.randint(0, self.max_speed))
                 pass
 
-            # Wait two secs
-            time.sleep()
-
 
 # b = behaviouralModule(debug=True)
 # 
@@ -175,7 +171,7 @@ if __name__ == "__main__":
 
     while True:
         b.react(c, None)
-        time.sleep(0.5)
+        time.sleep(2)
 
     print("LED set to yellow")
     controller.set_led([32, 32, 0])  # Set the LED to yellow
