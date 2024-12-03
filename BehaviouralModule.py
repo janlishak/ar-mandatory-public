@@ -109,7 +109,7 @@ class behaviouralModule:
         elif self.robot_type == "avoider2":
             # Line in front
             if (ground_sensors < self.thresholds["black-line"]).all():
-                self.set_motor_speed(self.max_speed, -self.max_speed)
+                self.set_motor_speed(self.max_speed//8, -self.max_speed//8)
                 if self.debug: print("Black line in front -> Turning 180.")
                 self.last_collision_time = time.time()
                 return
@@ -118,14 +118,14 @@ class behaviouralModule:
             if ground_sensors[0] < self.thresholds["black-line"]:
                 # Turn slightly to the right
                 if self.debug: print("Black line at left -> Turning right.")
-                self.set_motor_speed(self.max_speed/8, -self.max_speed/8)
+                self.set_motor_speed(self.max_speed//8, -self.max_speed//8)
                 self.last_collision_time = time.time()
                 return
 
             # Black line to the right
             if ground_sensors[1] < self.thresholds["black-line"]:
                 if self.debug: print("Black line at right -> Turning left.")
-                self.set_motor_speed(-self.max_speed/8, self.max_speed/8)
+                self.set_motor_speed(-self.max_speed//8, self.max_speed//8)
                 self.last_collision_time = time.time()
                 return
 
@@ -138,7 +138,7 @@ class behaviouralModule:
                 self.set_motor_speed(self.max_speed, self.max_speed)
             else:
                 # Recent collision, reduce speed to half
-                self.set_motor_speed(self.max_speed/4, self.max_speed/4)
+                self.set_motor_speed(self.max_speed//4, self.max_speed//4)
 
         else: # Then seeker
             ## CHECK FOR LINE ##
