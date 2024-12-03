@@ -122,7 +122,7 @@ class behaviouralModule:
                 if self.debug: print("Black line at right -> Turning left.")
                 self.set_motor_speed(-self.max_speed, self.max_speed)
                 return
-            
+
             # Just go Forward
             self.set_motor_speed(self.max_speed, self.max_speed)
 
@@ -194,7 +194,7 @@ if __name__ == "__main__":
 
     while True:
         b.react(c, None)
-        time.sleep(2)
+        time.sleep(0.2)
 
     print("LED set to yellow")
     controller.set_led([32, 32, 0])  # Set the LED to yellow
