@@ -13,9 +13,12 @@ class Camera:
 
 class behaviouralModule:
 
-    def __init__(self, max_speed=500, robot_threshold=100, thresholds={"robot": 1200, "black-line": 40, "safe-zone": 1200, "surface": 400}, debug=False):
+    def __init__(self, thymio, max_speed=500, robot_threshold=100, thresholds={"robot": 1200, "black-line": 40, "safe-zone": 1200, "surface": 400}, debug=False):
         self.max_speed = max_speed
-        self.motor_speed = (0, 0)
+        self.thymio = thymio
+        thymio.set_motors(0, 0) # Start stopped
+        self.horizontal_sensors = thymio.horizontal_sensors
+        self.ground_sensors = thymio.ground_sensors
         self.thresholds = thresholds
         self.debug = debug
         pass
@@ -25,14 +28,14 @@ class behaviouralModule:
         return self.motor_speed
     
     def set_motor_speed(self, left_motor, right_motor):
-        self.motor_speed = (left_motor, right_motor)
+        self.thymio.set_motors(left_motor, right_motor)
 
 
-    def react(self, sensors, camera, signal, robot_type="avoider"):
+    def react(self, camera, signal, robot_type="avoider"):
 
-        front_sensors = sensors[:5]
-        back_sensors = sensors[5:7]
-        ground_sensors = sensors[7:]
+        front_sensors = self.horizontal_sensors[:5]
+        back_sensors = self.horizontal_sensors[5:]
+        ground_sensors = self.ground_sensors
         
         if robot_type == "avoider":
             ## CHECK FOR LINE ##
@@ -77,7 +80,7 @@ class behaviouralModule:
 
             ## OTHER ROBOTS ##
             # If robot is in front
-            elif (sensors > self.thresholds["robot"]).any():
+            elif (self.horizontal_sensors > self.thresholds["robot"]).any():
                 # Robot to the left
                 if np.argmin(front_sensors) == 0:
                     # Move sharp right
@@ -144,12 +147,13 @@ tests = {
     "no-line-no-robot": np.array([500,500,500,500,500,500,500,400,400]),
 }
 
+cam = Camera()
 
 for test, vals in tests.items():
 
     print(f"TESTING: {test}\n")
 
     print(b.get_motor_speed())
-    b.react(sensors=vals, camera=None)
+    b.react(sensors=vals, camera=cam, signal=None)
     print(b.get_motor_speed())
     print("\n\n")
