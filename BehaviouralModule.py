@@ -34,6 +34,9 @@ class behaviouralModule:
         front_sensors = np.array(self.thymio.horizontal_sensors[:5])
         back_sensors = np.array(self.thymio.horizontal_sensors[5:])
         ground_sensors = np.array(self.thymio.ground_sensors)
+
+        print(ground_sensors)
+        return
         
         if self.robot_type == "avoider":
             ## CHECK FOR LINE ##
@@ -164,7 +167,7 @@ if __name__ == "__main__":
     controller.set_led([0, 32, 0])  # Set the LED to green
     time.sleep(3)
 
-    b = behaviouralModule(controller, debug=True)
+    b = behaviouralModule(controller, debug=False)
     c = FakeCamera()
 
     while True:
