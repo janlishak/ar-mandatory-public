@@ -1,43 +1,42 @@
+import time
 
 import numpy as np
 
-class Camera:
+from robot import ThymioController
 
+
+class FakeCamera:
     def __init__(self):
         pass
 
     def robot_in_view(self):
-        ### I DON'T KNOW WHAT IS RETURNED FROM THE CAMERA YET ###
-        return np.random.random() > 0.1
-
+        return False
+        # return np.random.random() > 0.1
 
 class behaviouralModule:
 
-    def __init__(self, thymio, max_speed=500, robot_threshold=100, thresholds={"robot": 1200, "black-line": 40, "safe-zone": 1200, "surface": 400}, debug=False):
+    def __init__(self, thymio, max_speed=500, robot_threshold=100, thresholds={"robot": 1200, "black-line": 40, "safe-zone": 1200, "surface": 400}, debug=False, type="avoider"):
         self.max_speed = max_speed
         self.thymio = thymio
         thymio.set_motors(0, 0) # Start stopped
-        self.horizontal_sensors = thymio.horizontal_sensors
-        self.ground_sensors = thymio.ground_sensors
         self.thresholds = thresholds
         self.debug = debug
-        pass
+        self.robot_type = type
 
-
-    def get_motor_speed(self):
-        return self.motor_speed
+    # def get_motor_speed(self):
+    #     return self.motor_speed
     
     def set_motor_speed(self, left_motor, right_motor):
         self.thymio.set_motors(left_motor, right_motor)
 
 
-    def react(self, camera, signal, robot_type="avoider"):
+    def react(self, camera, signal):
 
-        front_sensors = self.horizontal_sensors[:5]
-        back_sensors = self.horizontal_sensors[5:]
-        ground_sensors = self.ground_sensors
+        front_sensors = self.thymio.horizontal_sensors[:5]
+        back_sensors = self.thymio.horizontal_sensors[5:]
+        ground_sensors = self.thymio.ground_sensors
         
-        if robot_type == "avoider":
+        if self.robot_type == "avoider":
             ## CHECK FOR LINE ##
             # Line in front
             if (ground_sensors < self.thresholds["black-line"]).all():
@@ -80,7 +79,7 @@ class behaviouralModule:
 
             ## OTHER ROBOTS ##
             # If robot is in front
-            elif (self.horizontal_sensors > self.thresholds["robot"]).any():
+            elif (self.thymio.horizontal_sensors > self.thresholds["robot"]).any():
                 # Robot to the left
                 if np.argmin(front_sensors) == 0:
                     # Move sharp right
@@ -135,25 +134,48 @@ class behaviouralModule:
                 pass
 
 
-b = behaviouralModule(debug=True)
+# b = behaviouralModule(debug=True)
+# 
+# 
+# tests = {
+#     "line_in_front": np.array([500,500,500,500,500,500,500,20,20]),
+#     "line_at_left": np.array([500,500,500,500,500,500,500,20,100]),
+#     "line_at_right": np.array([500,500,500,500,500,500,500,100,20]),
+#     "line_in_front_robot_back": np.array([500,500,500,500,500,1500,100,20,20]),
+#     "no-line-robot-front": np.array([500,500,500,500,500,1500,1500,500,500]),
+#     "no-line-no-robot": np.array([500,500,500,500,500,500,500,400,400]),
+# }
+# 
+# cam = Camera()
+# 
+# for test, vals in tests.items():
+# 
+#     print(f"TESTING: {test}\n")
+# 
+#     print(b.get_motor_speed())
+#     b.react(sensors=vals, camera=cam, signal=None)
+#     print(b.get_motor_speed())
+#     print("\n\n")
 
 
-tests = {
-    "line_in_front": np.array([500,500,500,500,500,500,500,20,20]),
-    "line_at_left": np.array([500,500,500,500,500,500,500,20,100]),
-    "line_at_right": np.array([500,500,500,500,500,500,500,100,20]),
-    "line_in_front_robot_back": np.array([500,500,500,500,500,1500,100,20,20]),
-    "no-line-robot-front": np.array([500,500,500,500,500,1500,1500,500,500]),
-    "no-line-no-robot": np.array([500,500,500,500,500,500,500,400,400]),
-}
+if __name__ == "__main__":
+    controller = ThymioController()
 
-cam = Camera()
+    print("LED set to green")
+    controller.set_led([0, 32, 0])  # Set the LED to green
+    time.sleep(3)
 
-for test, vals in tests.items():
+    b = behaviouralModule(controller, debug=True)
+    c = FakeCamera()
 
-    print(f"TESTING: {test}\n")
+    while True:
+        b.react(c, None)
+        time.sleep(0.5)
 
-    print(b.get_motor_speed())
-    b.react(sensors=vals, camera=cam, signal=None)
-    print(b.get_motor_speed())
-    print("\n\n")
+    print("LED set to yellow")
+    controller.set_led([32, 32, 0])  # Set the LED to yellow
+    time.sleep(1)
+
+    # Stop the controller when done
+    controller.stop()
+    print("Controller stopped")
