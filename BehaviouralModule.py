@@ -115,13 +115,13 @@ class behaviouralModule:
             if ground_sensors[0] < self.thresholds["black-line"]:
                 # Turn slightly to the right
                 if self.debug: print("Black line at left -> Turning right.")
-                self.set_motor_speed(self.max_speed, -self.max_speed)
+                self.set_motor_speed(self.max_speed//4, -self.max_speed//4)
                 return
 
             # Black line to the right
             if ground_sensors[1] < self.thresholds["black-line"]:
                 if self.debug: print("Black line at right -> Turning left.")
-                self.set_motor_speed(-self.max_speed, self.max_speed)
+                self.set_motor_speed(-self.max_speed//4, self.max_speed//4)
                 return
 
             # Just go Forward

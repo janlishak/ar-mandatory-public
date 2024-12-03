@@ -13,8 +13,6 @@ class ThymioController:
         # Start the background thread that will run the Thymio control loop
         self.thread = threading.Thread(target=self.run_background, daemon=True)
         self.thread.start()
-        self.prev_left_motor_value = None
-        self.prev_right_motor_value = None
 
     def run_background(self):
         # Use the ClientAsync context manager to handle the connection to the Thymio robot.
@@ -30,31 +28,8 @@ class ThymioController:
                         # Testing explore
                         # self.explore()
                         # Apply the latest motor and LED values
-
-
-
-
-                        # node.v.motor.left.target = self.motor_values[0]
-                        # node.v.motor.right.target = self.motor_values[1]
-                        ####
-                        # Define smoothing factor (0.0 to 1.0, where 1.0 means no smoothing)
-                        smoothing_factor = 0.75
-
-                        # Previous motor values (initialize these somewhere, e.g., class-level variables or before the loop)
-                        self.prev_left_motor_value = node.v.motor.left.target
-                        self.prev_right_motor_value = node.v.motor.right.target
-
-                        # Smoothed motor value updates
-                        node.v.motor.left.target = (1 - smoothing_factor) * self.prev_left_motor_value + smoothing_factor * self.motor_values[0]
-                        node.v.motor.right.target = (1 - smoothing_factor) * self.prev_right_motor_value + smoothing_factor * self.motor_values[1]
-
-                        # Update previous motor values
-                        self.prev_left_motor_value = node.v.motor.left.target
-                        self.prev_right_motor_value = node.v.motor.right.target
-                        ###
-
-
-
+                        node.v.motor.left.target = self.motor_values[0]
+                        node.v.motor.right.target = self.motor_values[1]
                         node.v.leds.top = self.led_values
                         node.v.leds.bottom.left = self.led_values
                         node.v.leds.bottom.right = self.led_values
