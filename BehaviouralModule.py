@@ -78,7 +78,7 @@ class behaviouralModule:
 
             ## OTHER ROBOTS ##
             # If robot is in front
-            elif (self.thymio.horizontal_sensors > self.thresholds["robot"]).any():
+            elif (front_sensors > self.thresholds["robot"]).any():
                 # Robot to the left
                 if np.argmin(front_sensors) == 0:
                     # Move sharp right
