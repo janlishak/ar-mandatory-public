@@ -17,7 +17,7 @@ class behaviouralModule:
     def __init__(self,
                  thymio,
                  max_speed=80,
-                 thresholds={"robot": 1200, "black-line": 150, "safe-zone": 800},
+                 thresholds={"robot": 1200, "black-line": 150, "safe-zone": 800, "front": 3000},
                  debug=False,
                  type="avoider"):
         self.max_speed = max_speed
@@ -108,7 +108,7 @@ class behaviouralModule:
 
         elif self.robot_type == "avoider2":
             # Line in front
-            if (ground_sensors < self.thresholds["black-line"]).all():
+            if (ground_sensors < self.thresholds["black-line"]).all() or (front_sensors > self.thresholds["front"]).all():
                 self.set_motor_speed(self.max_speed//2, -self.max_speed//2)
                 if self.debug: print("Black line in front -> Turning 180.")
                 self.last_collision_time = time.time()
