@@ -41,7 +41,7 @@ class ThymioController:
                         # Apply changes to the Thymio
                         node.flush()
                         # Sleep for 0.1 seconds to prevent overloading
-                        time.sleep(0.3)
+                        time.sleep(0.1)
 
                     # Once out of the loop, stop the robot and set the top LED to red.
                     print("Thymio stopped successfully!")

@@ -36,7 +36,6 @@ class behaviouralModule:
         front_sensors = np.array(self.thymio.horizontal_sensors[:5])
         back_sensors = np.array(self.thymio.horizontal_sensors[5:])
         ground_sensors = np.array(self.thymio.ground_sensors)
-
         print(ground_sensors)
         
         if self.robot_type == "avoider":
@@ -110,6 +109,7 @@ class behaviouralModule:
             if (ground_sensors < self.thresholds["black-line"]).all():
                 self.set_motor_speed(self.max_speed, -self.max_speed)
                 if self.debug: print("Black line in front -> Turning 180.")
+                time.sleep(0.5)
                 return
 
             # Black line to the left
@@ -117,6 +117,7 @@ class behaviouralModule:
                 # Turn slightly to the right
                 if self.debug: print("Black line at left -> Turning right.")
                 self.set_motor_speed(self.max_speed, -self.max_speed)
+                time.sleep(0.5)
                 return
 
             # Black line to the right
