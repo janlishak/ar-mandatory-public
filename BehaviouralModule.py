@@ -166,7 +166,7 @@ if __name__ == "__main__":
     controller.set_led([0, 32, 0])  # Set the LED to green
     time.sleep(3)
 
-    b = behaviouralModule(controller, debug=False)
+    b = behaviouralModule(controller, debug=True)
     c = FakeCamera()
 
     while True:
