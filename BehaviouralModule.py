@@ -14,18 +14,20 @@ class FakeCamera:
         # return np.random.random() > 0.1
 
 class behaviouralModule:
-
-    def __init__(self, thymio, max_speed=80, robot_threshold=100, thresholds={"robot": 1200, "black-line": 150, "safe-zone": 800}, debug=False, type="avoider"):
+    def __init__(self,
+                 thymio,
+                 max_speed=80,
+                 thresholds={"robot": 1200, "black-line": 150, "safe-zone": 800},
+                 debug=False,
+                 type="avoider"):
         self.max_speed = max_speed
         self.thymio = thymio
-        thymio.set_motors([0,0])
         self.thresholds = thresholds
         self.debug = debug
         self.robot_type = type
 
-    # def get_motor_speed(self):
-    #     return self.motor_speed
-    
+        thymio.set_motors([0, 0])
+
     def set_motor_speed(self, left_motor, right_motor):
         self.thymio.set_motors([left_motor, right_motor])
 
@@ -158,30 +160,6 @@ class behaviouralModule:
                 pass
 
 
-# b = behaviouralModule(debug=True)
-# 
-# 
-# tests = {
-#     "line_in_front": np.array([500,500,500,500,500,500,500,20,20]),
-#     "line_at_left": np.array([500,500,500,500,500,500,500,20,100]),
-#     "line_at_right": np.array([500,500,500,500,500,500,500,100,20]),
-#     "line_in_front_robot_back": np.array([500,500,500,500,500,1500,100,20,20]),
-#     "no-line-robot-front": np.array([500,500,500,500,500,1500,1500,500,500]),
-#     "no-line-no-robot": np.array([500,500,500,500,500,500,500,400,400]),
-# }
-# 
-# cam = Camera()
-# 
-# for test, vals in tests.items():
-# 
-#     print(f"TESTING: {test}\n")
-# 
-#     print(b.get_motor_speed())
-#     b.react(sensors=vals, camera=cam, signal=None)
-#     print(b.get_motor_speed())
-#     print("\n\n")
-
-
 if __name__ == "__main__":
     controller = ThymioController()
 
@@ -189,7 +167,10 @@ if __name__ == "__main__":
     controller.set_led([0, 32, 0])  # Set the LED to green
     time.sleep(3)
 
-    b = behaviouralModule(controller, debug=True, type="avoider2")
+    b = behaviouralModule(controller,
+                          debug=True,
+                          max_speed=300,
+                          type="avoider2")
     c = FakeCamera()
 
     while True:
