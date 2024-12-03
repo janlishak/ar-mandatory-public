@@ -32,8 +32,8 @@ class behaviouralModule:
 
     def react(self, camera, signal):
 
-        front_sensors = self.thymio.horizontal_sensors[:5]
-        back_sensors = self.thymio.horizontal_sensors[5:]
+        front_sensors = np.array(self.thymio.horizontal_sensors[:5])
+        back_sensors = np.array(self.thymio.horizontal_sensors[5:])
         ground_sensors = np.array(self.thymio.ground_sensors)
         
         if self.robot_type == "avoider":
