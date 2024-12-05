@@ -70,7 +70,7 @@ class behaviouralModule:
             print("We are safe!")
             controller.is_safe = True
             controller.set_led = (0,255,0)
-            controller.set_motor_speed(0, 0)
+            self.set_motor_speed(0, 0)
             controller.running = False
 
         controller.is_safe = True
