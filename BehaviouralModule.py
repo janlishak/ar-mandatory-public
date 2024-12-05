@@ -1,6 +1,6 @@
 import time
 import numpy as np
-from robot import ThymioController
+from robot2 import ThymioController
 import threading
 
 SEEKER = 0
@@ -10,7 +10,7 @@ class behaviouralModule:
     def __init__(self,
                  thymio,
                  max_speed=80,
-                 thresholds={"robot": 1200, "black-line": 150, "safe-zone": 800, "front": 1600},
+                 thresholds={"robot": 1200, "black-line": 150, "safe-zone": 800, "front": 2000},
                  debug=False,
                  robot_type=AVOIDER):
         self.max_speed = max_speed
@@ -29,7 +29,7 @@ class behaviouralModule:
         front_sensors = np.array(self.thymio.horizontal_sensors[:5])
         # back_sensors = np.array(self.thymio.horizontal_sensors[5:])
         ground_sensors = np.array(self.thymio.ground_sensors)
-        print(front_sensors)
+        #print(front_sensors)
 
         # Something blocking the way
         if (front_sensors > self.thresholds["front"]).any():
