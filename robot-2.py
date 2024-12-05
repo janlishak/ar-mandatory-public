@@ -241,8 +241,8 @@ def test2():
 
 
 def test3():
-    controller.set_motors([200, 200])
-    time.sleep(3)
+    #controller.set_motors([200, 200])
+    time.sleep(120)
 
 
 if __name__ == "__main__":
@@ -255,7 +255,7 @@ if __name__ == "__main__":
     # RUN TEST
     # test1()
     # todo: run test2
-    test2()
+    test3()
 
     print("LED set to yellow")
     controller.set_led([32, 32, 0])  # Set the LED to yellow
