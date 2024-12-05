@@ -65,6 +65,10 @@ class behaviouralModule:
             self.last_collision_time = time.time()
             controller.is_safe = False
             return
+        
+        if (ground_sensors > self.thresholds["safe-zone"]).all():
+            print("We are safe!")
+            controller.is_safe = True
 
         controller.is_safe = True
         current_time = time.time()
@@ -82,7 +86,7 @@ class behaviouralModule:
 if __name__ == "__main__":
     controller = ThymioController()
     print("LED set to green")
-    controller.set_led([0, 32, 255])  # Set the LED to GREEN
+    controller.set_led([0, 32, 0])  # Set the LED to GREEN
     time.sleep(3)
     controller.set_led([0, 0, 255])  # Set the LED to BLUE
     b = behaviouralModule(controller, debug=True, max_speed=300, robot_type=AVOIDER)

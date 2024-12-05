@@ -80,6 +80,7 @@ class ThymioController:
         self.thread = threading.Thread(target=self.run_background, daemon=True)
         self.thread.start()
         self.program = program
+        self.is_safe = False
 
     def run_background(self):
         # Use the ClientAsync context manager to handle the connection to the Thymio robot.
@@ -105,10 +106,12 @@ class ThymioController:
                         message = node.v.prox.comm.rx
                         print(f"message from Thymio: {message}")
 
-                        if message == 1:
+                        if (message == 1) and (not self.is_safe):
                             node.v.motor.left.target = 0
                             node.v.motor.right.target = 0
                             node.v.leds.top = [32, 0, 32]
+                            node.v.leds.top.left = [32, 0, 32]
+                            node.v.leds.top.right = [32, 0, 32]
                             node.v.leds.bottom.left = [32, 0, 32]
                             node.v.leds.bottom.right = [32, 0, 32]
                             break
