@@ -64,6 +64,7 @@ class ThymioController:
         self.thread.join()
 
     def perform_action(self, action: str, speed: int = 100):
+        print("taking::" + action)
         # Keep speed within motor ranges
         if speed > 500:
             speed = 500
