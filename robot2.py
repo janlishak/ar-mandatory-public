@@ -136,7 +136,7 @@ class ThymioController:
                     print("Thymio stopped successfully!")
                     node.v.motor.left.target = 0
                     node.v.motor.right.target = 0
-                    node.v.leds.top = [32, 0, 0]
+                    #node.v.leds.top = [32, 0, 0]
                     node.flush()
 
             # Run the asynchronous function to control the Thymio.
