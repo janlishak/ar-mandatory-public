@@ -87,6 +87,7 @@ class ThymioController:
         with ClientAsync() as client:
             async def prog():
                 with await client.lock() as node:
+                    self.node = node
                     # Compile and send the program to the Thymio.
                     error = await node.compile(self.program) ## IR MODULE
                     if error is not None:
