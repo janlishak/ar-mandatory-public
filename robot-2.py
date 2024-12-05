@@ -2,7 +2,7 @@ import time
 import threading
 from tdmclient import ClientAsync
 
-avoider_program = """
+AVOIDER = """
 # Variables must be at start
 var send_interval = 200  # time in milliseconds
 var signal_detected = 0  # For storing received signal
@@ -35,7 +35,7 @@ onevent timer1
     timer.period[1] = 0
 """
 
-seeker_program = """
+SEEKER = """
 # Variables must be at start
 var send_interval = 200  # time in milliseconds
 var signal_detected = 0  # For storing received signal
@@ -70,7 +70,7 @@ onevent timer1
 
 
 class ThymioController:
-    def __init__(self):
+    def __init__(self, program=AVOIDER):
         self.motor_values = [0, 0]  # Default motor values
         self.led_values = [0, 0, 0]  # Default LED values
         self.running = True
@@ -79,6 +79,7 @@ class ThymioController:
         # Start the background thread that will run the Thymio control loop
         self.thread = threading.Thread(target=self.run_background, daemon=True)
         self.thread.start()
+        self.program = program
 
     def run_background(self):
         # Use the ClientAsync context manager to handle the connection to the Thymio robot.
@@ -86,7 +87,7 @@ class ThymioController:
             async def prog():
                 with await client.lock() as node:
                     # Compile and send the program to the Thymio.
-                    error = await node.compile(avoider_program) ## IR MODULE
+                    error = await node.compile(self.program) ## IR MODULE
                     if error is not None:
                         print(f"Compilation error: {error['error_msg']}")
                     else:
@@ -241,7 +242,7 @@ def test2():
 
 
 def test3():
-    #controller.set_motors([200, 200])
+    controller.set_motors([200, 200])
     time.sleep(120)
 
 
