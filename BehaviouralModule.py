@@ -69,8 +69,9 @@ class behaviouralModule:
         if (ground_sensors > self.thresholds["safe-zone"]).all():
             print("We are safe!")
             controller.is_safe = True
-            controller.set_led = (0,255,0)
             self.set_motor_speed(0, 0)
+            controller.set_led = (0,255,0)
+            time.sleep(3)
             controller.running = False
 
         controller.is_safe = True
