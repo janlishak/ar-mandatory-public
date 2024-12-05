@@ -119,6 +119,8 @@ class ThymioController:
                         node.v.motor.left.target = self.motor_values[0]
                         node.v.motor.right.target = self.motor_values[1]
                         node.v.leds.top = self.led_values
+                        node.v.leds.top.left = self.led_values
+                        node.v.leds.top.right = self.led_values
                         node.v.leds.bottom.left = self.led_values
                         node.v.leds.bottom.right = self.led_values
                         # Pass the sensors to the robot
