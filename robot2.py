@@ -146,7 +146,11 @@ class ThymioController:
         self.motor_values = values
 
     def set_led(self, values):
-        self.led_values = values
+        self.node.v.leds.bottom = values
+        self.node.v.leds.top = values
+        self.node.v.leds.top = values
+        self.node.v.leds.bottom.left = values
+        self.node.v.leds.bottom.right = values
 
     def stop(self):
         self.running = False
