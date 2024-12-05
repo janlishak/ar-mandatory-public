@@ -105,6 +105,13 @@ class ThymioController:
                         message = node.v.prox.comm.rx
                         print(f"message from Thymio: {message}")
 
+                        if message == 1:
+                            node.v.motor.left.target = 0
+                            node.v.motor.right.target = 0
+                            node.v.leds.top = [32, 0, 32]
+                            node.v.leds.bottom.left = [32, 0, 32]
+                            node.v.leds.bottom.right = [32, 0, 32]
+
                         # Testing explore
                         # self.explore()
                         # Apply the latest motor and LED values
