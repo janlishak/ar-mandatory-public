@@ -1,6 +1,6 @@
-from picamera2 import Picamera2
 import cv2
 import time
+from picamera2 import Picamera2
 
 
 class ThymioCamera:
