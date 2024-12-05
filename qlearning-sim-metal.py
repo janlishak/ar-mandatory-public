@@ -316,7 +316,7 @@ if __name__ == "__main__":
     # REAL WORLD
     else:
         # Behavior Module
-        b = behaviouralModule(problem.simulation.controller, debug=True, max_speed=300, robot_type=SEEKER)
+        b = behaviouralModule(problem.simulation.controller, debug=True, max_speed=100, robot_type=SEEKER)
         def behavior_loop():
             while True:
                 b.update()
