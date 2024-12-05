@@ -121,7 +121,7 @@ class behaviouralModule:
                 self.set_motor_speed(self.max_speed//2, -self.max_speed//2)
                 if self.debug: print("Black line in front -> Turning 180.")
                 self.last_collision_time = time.time()
-                # time.sleep(1)
+                time.sleep(1)
                 return
 
             # Black line to the left
