@@ -149,7 +149,6 @@ class QValueStore:
 class ReinforcementProblem:
     def __init__(self, is_simulation=False) -> None:
         self.image_processor = ImageProcessor()
-        self.image_processor.set_frame_provider(self.simulation.capture_frame_to_numpy)
 
         if is_simulation:
             self.simulation = Simulation()
@@ -158,6 +157,8 @@ class ReinforcementProblem:
             from robot_metal import Metal
             self.simulation = Metal()
             self.image_processor.set_trackbar_values([41, 83, 97, 151, 110, 255, 5, 30])
+
+        self.image_processor.set_frame_provider(self.simulation.capture_frame_to_numpy)
 
         self.simulation.update()
         self.image_processor.update()
