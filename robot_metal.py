@@ -11,9 +11,6 @@ class Metal:
         self.current_action = "STOP"
         self.speed = 50
 
-    def set_motors(self, values):
-        self.controller.set_motors(values)
-
     def capture_frame_to_numpy(self):
         return self.camera.read_frame()
 
