@@ -4,7 +4,6 @@ import pickle
 import random
 import time
 
-from image_processor import ImageProcessor, ComputerCamera
 from simulation import Simulation
 from image_processor import ImageProcessor
 import threading
@@ -148,8 +147,12 @@ class QValueStore:
 
 
 class ReinforcementProblem:
-    def __init__(self) -> None:
-        self.simulation = Simulation()
+    def __init__(self, is_simulation=False) -> None:
+        if is_simulation:
+            self.simulation = Simulation()
+        else:
+            from robot_metal import Metal
+            self.simulation = Metal()
         self.image_processor = ImageProcessor()
         self.image_processor.set_trackbar_values([29, 78, 139, 255, 110, 255, 5, 30])
         self.image_processor.set_frame_provider(self.simulation.capture_frame_to_numpy)
@@ -278,10 +281,11 @@ def q_learning(
 
 
 if __name__ == "__main__":
+    is_simulation = False
     store = QValueStore("training")
     # store.print_best_actions()
     store.print_best_action_per_state()
-    problem = ReinforcementProblem()
+    problem = ReinforcementProblem(is_simulation)
 
     learning_rate = 0.1
     discount_rate = 0.75
@@ -296,8 +300,12 @@ if __name__ == "__main__":
     thread = threading.Thread(target=q_learn_loop, daemon=True)
     thread.start()
 
-    def update():
-        problem.simulation.update()
-        problem.image_processor.update()
+    if not is_simulation:
+        def update():
+            problem.simulation.update()
+            problem.image_processor.update()
+        problem.simulation.app.run()
 
-    problem.simulation.app.run()
+    else:
+        while True:
+            problem.image_processor.update()
