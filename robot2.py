@@ -106,7 +106,7 @@ class ThymioController:
                         message = node.v.prox.comm.rx
                         print(f"message from Thymio: {message}")
 
-                        if (message == 1) and (not self.is_safe):
+                        if (message == 1):# and (not self.is_safe)
                             node.v.motor.left.target = 0
                             node.v.motor.right.target = 0
                             node.v.leds.top = [32, 0, 32]
