@@ -72,7 +72,7 @@ onevent timer1
 class ThymioController:
     def __init__(self, program=AVOIDER):
         self.motor_values = [0, 0]  # Default motor values
-        self.led_values = [0, 0, 0]  # Default LED values
+        self.led_values = [0, 0, 255]  # Default LED values
         self.running = True
         self.horizontal_sensors = None
         self.ground_sensors = None
@@ -111,6 +111,7 @@ class ThymioController:
                             node.v.leds.top = [32, 0, 32]
                             node.v.leds.bottom.left = [32, 0, 32]
                             node.v.leds.bottom.right = [32, 0, 32]
+                            break
 
                         # Testing explore
                         # self.explore()
