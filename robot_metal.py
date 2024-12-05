@@ -54,4 +54,5 @@ if __name__ == '__main__':
     # Test movement
     test_move_left_right_forward(metal)
     metal.perform_action("STOP")
+    time.sleep(1)
 
