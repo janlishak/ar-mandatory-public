@@ -65,7 +65,7 @@ class behaviouralModule:
             self.last_collision_time = time.time()
             controller.is_safe = False
             return
-        
+        print(ground_sensors)
         if (ground_sensors > self.thresholds["safe-zone"]).all():
             print("We are safe!")
             controller.is_safe = True
