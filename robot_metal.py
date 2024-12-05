@@ -9,7 +9,7 @@ class Metal:
         self.camera = ThymioCamera()
         self.controller = ThymioController()
         self.current_action = "STOP"
-        self.speed = 50
+        self.speed = 100
 
     def capture_frame_to_numpy(self):
         return self.camera.read_frame()

@@ -72,10 +72,10 @@ class ThymioController:
             speed = -500
 
         if action == "LEFT":
-            self.set_motors([-speed, speed])
+            self.set_motors([0, speed])
             return
         if action == "RIGHT":
-            self.set_motors([speed, -speed])
+            self.set_motors([speed, 0])
             return
         if action == "FORWARD":
             self.set_motors([speed, speed])
