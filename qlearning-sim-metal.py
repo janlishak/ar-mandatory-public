@@ -281,7 +281,7 @@ def q_learning(
 
 
 if __name__ == "__main__":
-    is_simulation = False
+    is_simulation = True
     store = QValueStore("training")
     # store.print_best_actions()
     store.print_best_action_per_state()
@@ -300,7 +300,7 @@ if __name__ == "__main__":
     thread = threading.Thread(target=q_learn_loop, daemon=True)
     thread.start()
 
-    if not is_simulation:
+    if is_simulation:
         def update():
             problem.simulation.update()
             problem.image_processor.update()
