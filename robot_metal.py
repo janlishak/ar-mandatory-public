@@ -6,8 +6,9 @@ import time
 
 class Metal:
     def __init__(self):
-        self.camera = ThymioCamera()
         self.controller = ThymioController()
+        self.controller.set_motors([0,0])
+        self.camera = ThymioCamera()
         self.current_action = "STOP"
         self.speed = 100
 
