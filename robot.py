@@ -5,6 +5,7 @@ from tdmclient import ClientAsync
 
 class ThymioController:
     def __init__(self):
+        self.is_safe = True
         self.motor_values = [0, 0]  # Default motor values
         self.led_values = [0, 0, 0]  # Default LED values
         self.running = True

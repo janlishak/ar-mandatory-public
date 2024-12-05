@@ -4,10 +4,13 @@ import pickle
 import random
 import time
 
+from BehaviouralModule import behaviouralModule
 from simulation import Simulation
 from image_processor import ImageProcessor
 import threading
 
+SEEKER = 0
+AVOIDER = 1
 
 class State:
     def __init__(self, image_processor = None, simulation = None, fromString = None) -> None:
@@ -303,12 +306,25 @@ if __name__ == "__main__":
     thread = threading.Thread(target=q_learn_loop, daemon=True)
     thread.start()
 
+    # SIMULATION
     if is_simulation:
         def update():
             problem.simulation.update()
             problem.image_processor.update()
         problem.simulation.app.run()
 
+    # REAL WORLD
     else:
+        # Behavior Module
+        b = behaviouralModule(problem.simulation.controller, debug=True, max_speed=300, robot_type=SEEKER)
+        def behavior_loop():
+            while True:
+                b.update()
+                time.sleep(0.2)
+
+
+        thread = threading.Thread(target=behavior_loop, daemon=True)
+        thread.start()
+        # Image processing loop
         while True:
             problem.image_processor.update()

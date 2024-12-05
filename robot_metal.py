@@ -19,7 +19,10 @@ class Metal:
         pass
 
     def perform_action(self, action: str):
-        self.controller.perform_action(action, self.speed)
+        if self.controller.is_safe:
+            self.controller.perform_action(action, self.speed)
+        else:
+            print("Robot is not safe! Seeking disabled")
 
 
 def test_move_left_right_forward(metal):
