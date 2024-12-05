@@ -86,7 +86,7 @@ class ThymioController:
         # Use the ClientAsync context manager to handle the connection to the Thymio robot.
         with ClientAsync() as client:
             async def prog():
-                with await client.lock() as node:
+                with await client.lock() as self.node:
                     self.node = node
                     # Compile and send the program to the Thymio.
                     error = await node.compile(self.program) ## IR MODULE
