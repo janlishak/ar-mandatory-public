@@ -177,7 +177,7 @@ class ReinforcementProblem:
     # Take the given action and state, and return
     # a pair consisting of the reward and the new state.
     def take_action(self, state: State, action: Action) -> tuple[float, State]:
-
+        print(action)
         # todo: disabled here!
         self.simulation.perform_action(str(action))
         time.sleep(0.25)
