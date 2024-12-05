@@ -70,7 +70,7 @@ class behaviouralModule:
             print(ground_sensors)
             print("We are safe!")
             controller.is_safe = True
-            controller.set_led = (0,255,0)
+            self.led_values = (0,255,0)
             time.sleep(1)
             self.set_motor_speed(0, 0)
             controller.running = False
