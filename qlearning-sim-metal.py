@@ -281,7 +281,7 @@ def q_learning(
 
 
 if __name__ == "__main__":
-    is_simulation = True
+    is_simulation = False
     store = QValueStore("training")
     # store.print_best_actions()
     store.print_best_action_per_state()

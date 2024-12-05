@@ -9,7 +9,7 @@ class Metal:
         self.camera = ThymioCamera()
         self.controller = ThymioController()
         self.current_action = "STOP"
-        self.speed = 100
+        self.speed = 50
 
     def set_motors(self, values):
         self.controller.set_motors(values)

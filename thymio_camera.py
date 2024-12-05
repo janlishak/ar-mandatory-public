@@ -34,6 +34,7 @@ class ThymioCamera:
     def read_frame(self):
         image = self.camera.capture_array()
         image = cv2.flip(image, 0)
+        image = cv2.flip(image, 1)
         return image
 
     def stop_camera(self):
