@@ -114,10 +114,10 @@ class behaviouralModule:
 
                     if r < 0.5:
                         self.set_motor_speed(0, self.max_speed)
-                        time.sleep(0.5)
+                        time.sleep(0.1)
                     else:
                         self.set_motor_speed(self.max_speed, 0)
-                        time.sleep(0.5)
+                        time.sleep(0.1)
                 
             self.set_motor_speed(self.max_speed, self.max_speed)
 
