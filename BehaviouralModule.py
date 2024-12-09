@@ -66,7 +66,7 @@ class behaviouralModule:
             controller.is_safe = False
             return
         
-        if self.robot_type == AVOIDER & (ground_sensors > self.thresholds["safe-zone"]).all():
+        if (self.robot_type == AVOIDER) and (ground_sensors > self.thresholds["safe-zone"]).all():
             print(ground_sensors)
             print("We are safe!")
             controller.is_safe = True
