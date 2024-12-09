@@ -92,23 +92,29 @@ class behaviouralModule:
 
         else:
             # TODO: Follow things with camera
-            if time_since_collision > self.collision_timeout:
-                result = controller.process_image()
+            result = controller.process_image()
 
-                if result == "left":
-                    self.set_motor_speed(-self.max_speed//2, self.max_speed//2)
-                    time.sleep(0.5)
-                elif result == "right":
-                    self.set_motor_speed(self.max_speed//2, -self.max_speed//2)
+            if result == "left":
+                self.set_motor_speed(-self.max_speed//2, self.max_speed//2)
+                time.sleep(0.5)
+            elif result == "right":
+                self.set_motor_speed(self.max_speed//2, -self.max_speed//2)
+                time.sleep(0.5)
+            elif result == "center":
+                self.set_motor_speed(self.max_speed, self.max_speed)
+                time.sleep(0.5)
+            else:
+                print("We are going random")
+                r = np.random.random()
+                if r < 0.5:
+                    self.set_motor_speed(0, self.max_speed)
                     time.sleep(0.5)
                 else:
-                    print("We are going random")
-                    r = np.random.random()
-                    if r < 0.5:
-                        self.set_motor_speed(0, self.max_speed)
-                    else:
-                        self.set_motor_speed(self.max_speed, 0)
+                    self.set_motor_speed(self.max_speed, 0)
                     time.sleep(0.5)
+                
+                if time_since_collision > self.collision_timeout:
+                    self.set_motor_speed(self.max_speed, self.max_speed)
 
 
 if __name__ == "__main__":

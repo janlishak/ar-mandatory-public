@@ -87,7 +87,7 @@ class ThymioController:
         self.camera = ThymioCamera()
 
 
-    def process_image(self, height=120, width=160, min_area=2000, blr=5):
+    def process_image(self, height=120, width=160, min_area=4000, blr=5):
 
         # warning - mutation of frame
         frame = self.camera.read_frame()
@@ -129,13 +129,15 @@ class ThymioController:
                     #cv2.drawContours(blurred_image, [largest_contour], -1, (0, 255, 0), 3)
                     #cv2.circle(blurred_image, (cx, cy), 25, (255, 0, 0), -1)
                     #cv2.imwrite("image.jpg", blurred_image)
-                    offset = (cx - 60) / 60
-                    if offset < 0:
+                    if cx < 45:
                         print("Objective to left")
                         return "left"
-                    else:
+                    elif cx > 75:
                         print("Objective to right")
                         return "right"
+                    else:
+                        print("Objective in front")
+                        return "front"
                 else:
                     pass
                     #print("No centroid found due to zero area.")
