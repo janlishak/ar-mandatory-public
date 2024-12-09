@@ -76,6 +76,7 @@ class behaviouralModule:
             time.sleep(2)
             #controller.running = False
             self.set_motor_speed(self.max_speed, self.max_speed)
+            controller.set_led([0,0,255])
 
         controller.is_safe = True
         current_time = time.time()

@@ -143,6 +143,7 @@ class ThymioController:
             # Run the asynchronous function to control the Thymio.
             client.run_async_program(prog)
 
+
     def set_motors(self, values):
         self.motor_values = values
 
