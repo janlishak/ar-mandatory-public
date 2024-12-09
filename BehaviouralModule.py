@@ -95,10 +95,10 @@ class behaviouralModule:
 if __name__ == "__main__":
     controller = ThymioController()
     print("LED set to green")
-    controller.set_led([0, 32, 0])  # Set the LED to GREEN
-    time.sleep(3)
+    controller.set_led([255, 255, 255])  # Set the LED to GREEN
+    time.sleep(1)
     controller.set_led([0, 0, 255])  # Set the LED to BLUE
-    b = behaviouralModule(controller, debug=True, max_speed=300, robot_type=AVOIDER)
+    b = behaviouralModule(controller, debug=True, max_speed=500, robot_type=SEEKER)
     def behavior_loop():
         while True:
             b.update()
