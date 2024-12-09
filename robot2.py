@@ -101,7 +101,7 @@ class ThymioController:
         mask = cv2.inRange(blurred_image, (0,0,50), (255,255,255))
         contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         print("MASK: ")
-        cv2.imwrite("mask.jpg", contours)
+        cv2.imwrite("mask.jpg", mask)
         # Initialize variables to find the largest contour
         largest_contour = None
         largest_area = 0
