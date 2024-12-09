@@ -1,5 +1,6 @@
 import time
 import threading
+from thymio_camera import ThymioCamera
 from tdmclient import ClientAsync
 
 AVOIDER = """
@@ -81,6 +82,11 @@ class ThymioController:
         self.thread.start()
         self.program = program
         self.is_safe = False
+        self.camera = ThymioCamera()
+
+
+    def capture_frame_to_numpy(self):
+        return self.camera.read_frame()
 
     def run_background(self):
         # Use the ClientAsync context manager to handle the connection to the Thymio robot.
