@@ -107,20 +107,10 @@ class ThymioController:
 
         mask = cv2.inRange(hsv_image, lower_blue, upper_blue)
         contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        print("MASK: ")
-        cv2.imwrite("mask.jpg", mask)
+        #cv2.imwrite("mask.jpg", mask)
         # Initialize variables to find the largest contour
         largest_contour = None
         largest_area = 0
-
-        # Iterate through contours to find the largest one
-        #for contour in contours:
-        #    area = cv2.contourArea(contour)
-        #    if area > min_area:  # Only consider contours above a certain area threshold
-        #        if area > largest_area:
-        #            largest_area = area
-        #            largest_contour = contour
-        #            print("WE FOUND SOMETHING!")
 
         if contours:
             # Find the largest contour
@@ -134,15 +124,16 @@ class ThymioController:
                 print(f"Centroid of the robot: ({cx}, {cy})")
                 
                 # Draw the contour and centroid on the original image
-                cv2.drawContours(blurred_image, [largest_contour], -1, (0, 255, 0), 3)
-                cv2.circle(blurred_image, (cx, cy), 25, (255, 0, 0), -1)
-                cv2.imwrite("image.jpg", blurred_image)
+                #cv2.drawContours(blurred_image, [largest_contour], -1, (0, 255, 0), 3)
+                #cv2.circle(blurred_image, (cx, cy), 25, (255, 0, 0), -1)
+                #cv2.imwrite("image.jpg", blurred_image)
                 offset = (cx - 60) / 60
                 if offset < 0:
                     print("Objective to left")
+                    self.motor_values = [int((1+offset)* 500), 500]
                 else:
                     print("Objective to right")
-                #self.motor_values = [int(offset * 500, -offset * 500]
+                    self.motor_values = [500, int((1-offset) * 500)]
             else:
                 print("No centroid found due to zero area.")
         else:
