@@ -102,7 +102,7 @@ class ThymioController:
         hsv_image = cv2.cvtColor(blurred_image, cv2.COLOR_BGR2HSV)
 
         # Define the blue color range
-        lower_blue = np.array([100, 150, 50])  # Adjust based on your robot's blue
+        lower_blue = np.array([100, 150, 50])
         upper_blue = np.array([140, 255, 255])
 
         mask = cv2.inRange(hsv_image, lower_blue, upper_blue)
@@ -130,7 +130,7 @@ class ThymioController:
                     # Draw the contour and centroid on the original image
                     cv2.drawContours(blurred_image, [largest_contour], -1, (0, 255, 0), 3)
                     cv2.circle(blurred_image, (cx, cy), 25, (255, 0, 0), -1)
-                    cv2.imwrite("image.jpg", blurred_image)
+                    #cv2.imwrite("image.jpg", blurred_image)
                     return cx
                 else:
                     pass
