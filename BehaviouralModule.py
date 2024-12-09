@@ -103,18 +103,27 @@ class behaviouralModule:
                     time.sleep(0.5)
                 else:
                     print("We are going random")
-                    r1, r2 = np.random.random(2)
-                    self.set_motor_speed(int(r1*self.max_speed), int(r2*self.max_speed))
+                    r = np.random.random()
+                    if r < 0.5:
+                        self.set_motor_speed(0, self.max_speed)
+                    else:
+                        self.set_motor_speed(self.max_speed, 0)
                     time.sleep(0.5)
 
 
 if __name__ == "__main__":
+
+    robot_type = SEEKER ## SET HERE THE ROBOT TYPE
     controller = ThymioController()
-    print("LED set to green")
+    print("LED set to WHITE")
     controller.set_led([255, 255, 255])  # Set the LED to WHITE
-    time.sleep(1)
-    controller.set_led([0, 0, 255])  # Set the LED to BLUE
-    b = behaviouralModule(controller, debug=True, max_speed=500, robot_type=SEEKER)
+    time.sleep(0.5)
+    if robot_type == AVOIDER:
+        controller.set_led([0, 0, 255])  # Set the LED to BLUE
+    else:
+        controller.set_led([255, 0, 0])  # Set the LED to RED
+    
+    b = behaviouralModule(controller, debug=True, max_speed=500, robot_type=robot_type)
     def behavior_loop():
         while True:
             b.update()

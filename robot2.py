@@ -167,7 +167,7 @@ class ThymioController:
                     while self.running:
 
                         message = node.v.prox.comm.rx
-                        print(f"message from Thymio: {message}")
+                        #print(f"message from Thymio: {message}")
 
                         if (message == 1):# and (not self.is_safe)
                             node.v.motor.left.target = 0
