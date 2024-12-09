@@ -33,7 +33,7 @@ class behaviouralModule:
 
         # Something blocking the way
         if (front_sensors > self.thresholds["front"]).any():
-            self.set_motor_speed(0, 0)
+            self.set_motor_speed(self.max_speed, -self.max_speed)
             if self.debug: print("Blocked")
             self.last_collision_time = time.time()
             time.sleep(0.5)
