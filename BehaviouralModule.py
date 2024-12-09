@@ -106,21 +106,21 @@ class behaviouralModule:
             elif result == "center":
                 self.set_motor_speed(self.max_speed, self.max_speed)
                 time.sleep(0.5)
-            elif time_since_last_random > self.random_timeout:
-                print("We are going random")
-                r = np.random.random()
-                self.last_random = time.time()
+            else:
+                if time_since_last_random > self.random_timeout:
+                    print("We are going random")
+                    r = np.random.random()
+                    self.last_random = time.time()
+
+                    if r < 0.5:
+                        self.set_motor_speed(0, self.max_speed)
+                        time.sleep(0.5)
+                    else:
+                        self.set_motor_speed(self.max_speed, 0)
+                        time.sleep(0.5)
                 
-                if r < 0.5:
-                    self.set_motor_speed(0, self.max_speed)
-                    time.sleep(0.5)
-                else:
-                    self.set_motor_speed(self.max_speed, 0)
-                    time.sleep(0.5)
-                
-            if time_since_collision > self.collision_timeout:
-                self.set_motor_speed(self.max_speed, self.max_speed)
-                time.sleep(0.5)
+            self.set_motor_speed(self.max_speed, self.max_speed)
+            time.sleep(0.5)
 
 
 if __name__ == "__main__":
