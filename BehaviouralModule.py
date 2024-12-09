@@ -128,8 +128,8 @@ class behaviouralModule:
                 self.set_motor_speed(self.max_speed, self.max_speed)
                 time.sleep(0.5)
                 
-            #self.set_motor_speed(self.max_speed, self.max_speed)
-            self.set_motor_speed(0, 0)
+            self.set_motor_speed(self.max_speed, self.max_speed)
+            #self.set_motor_speed(0, 0)
 
 
 if __name__ == "__main__":
