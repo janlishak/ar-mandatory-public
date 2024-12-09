@@ -98,10 +98,14 @@ class ThymioController:
 
         blurred_image = cv2.GaussianBlur(frame, (blr, blr), 0)
 
-        # Create a mask
-        lower_blue = np.array([50,100,120])
-        upper_blue = np.array([70,255,255])
-        mask = cv2.inRange(blurred_image, lower_blue, upper_blue)
+        # Convert the image to HSV
+        hsv_image = cv2.cvtColor(blurred_image, cv2.COLOR_BGR2HSV)
+
+        # Define the blue color range
+        lower_blue = np.array([100, 150, 50])  # Adjust based on your robot's blue
+        upper_blue = np.array([140, 255, 255])
+
+        mask = cv2.inRange(hsv_image, lower_blue, upper_blue)
         contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         print("MASK: ")
         cv2.imwrite("mask.jpg", mask)
