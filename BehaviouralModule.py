@@ -98,14 +98,17 @@ class behaviouralModule:
             result = controller.process_image()
 
             if result == "left":
+                time.sleep(10)
                 self.set_motor_speed(-self.max_speed//2, self.max_speed//2)
-                time.sleep(10)
+                time.sleep(0.5)
             elif result == "right":
+                time.sleep(10)
                 self.set_motor_speed(self.max_speed//2, -self.max_speed//2)
-                time.sleep(10)
+                time.sleep(0.5)
             elif result == "center":
-                self.set_motor_speed(self.max_speed, self.max_speed)
                 time.sleep(10)
+                self.set_motor_speed(self.max_speed, self.max_speed)
+                time.sleep(0.5)
             else:
                 if time_since_last_random > self.random_timeout:
                     print("We are going random")
