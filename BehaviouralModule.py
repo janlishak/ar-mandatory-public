@@ -100,12 +100,12 @@ class behaviouralModule:
             if result == "left":
                 print("Objective to left")
                 time.sleep(10)
-                self.set_motor_speed(-self.max_speed//2, self.max_speed//2)
+                self.set_motor_speed(0, self.max_speed//2)
                 time.sleep(0.5)
             elif result == "right":
                 print("Objective to right")
                 time.sleep(10)
-                self.set_motor_speed(self.max_speed//2, -self.max_speed//2)
+                self.set_motor_speed(self.max_speed//2, 0)
                 time.sleep(0.5)
             elif result == "center":
                 print("Objective in front")
@@ -113,6 +113,7 @@ class behaviouralModule:
                 self.set_motor_speed(self.max_speed, self.max_speed)
                 time.sleep(0.5)
             else:
+                continue
                 if time_since_last_random > self.random_timeout:
                     print("We are going random")
                     r = np.random.random()
