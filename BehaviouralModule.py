@@ -113,7 +113,7 @@ class behaviouralModule:
                 self.set_motor_speed(self.max_speed, self.max_speed)
                 time.sleep(0.5)
             else:
-                continue
+                """
                 if time_since_last_random > self.random_timeout:
                     print("We are going random")
                     r = np.random.random()
@@ -125,6 +125,8 @@ class behaviouralModule:
                     else:
                         self.set_motor_speed(self.max_speed, 0)
                         time.sleep(0.1)
+                """
+                pass
                 
             #self.set_motor_speed(self.max_speed, self.max_speed)
             self.set_motor_speed(0, 0)
