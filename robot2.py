@@ -101,6 +101,10 @@ class ThymioController:
         # Convert the image to HSV
         hsv_image = cv2.cvtColor(blurred_image, cv2.COLOR_BGR2HSV)
 
+        print(hsv_image.min())
+        print(hsv_image.max())
+        input("PAUSEEEEE")
+
         # Define the blue color range
         lower_blue = np.array([240, 60, 30])
         upper_blue = np.array([240, 90, 100])
