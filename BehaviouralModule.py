@@ -102,7 +102,7 @@ class behaviouralModule:
         else:
             # TODO: Follow things with camera
             result = controller.process_image(**self.image_settings)
-            sp = int((abs(result - 80) / 80) * 500)
+            sp = int((abs(result - (self.image_settings["height"]//2)) / (self.image_settings["height"]//2)) * self.max_speed)
             if not result:
                 print("Nothing to see")
                 if time_since_last_random > self.random_timeout:
