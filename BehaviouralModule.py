@@ -66,14 +66,14 @@ class behaviouralModule:
             controller.is_safe = False
             return
         
-        if (ground_sensors > self.thresholds["safe-zone"]).all():
+        if self.robot_type == AVOIDER & (ground_sensors > self.thresholds["safe-zone"]).all():
             print(ground_sensors)
             print("We are safe!")
             controller.is_safe = True
             controller.set_led([0,255,0])
             time.sleep(1)
             self.set_motor_speed(0, 0)
-            print(controller.capture_frame_to_numpy())
+            controller.process_image()
             time.sleep(2)
             #controller.running = False
             self.set_motor_speed(self.max_speed, self.max_speed)
@@ -91,11 +91,15 @@ class behaviouralModule:
                 # Recent collision, reduce speed to half
                 self.set_motor_speed(self.max_speed//2, self.max_speed//2)
 
+        else:
+            # TODO: Follow things with camera
+            pass
+
 
 if __name__ == "__main__":
     controller = ThymioController()
     print("LED set to green")
-    controller.set_led([255, 255, 255])  # Set the LED to GREEN
+    controller.set_led([255, 255, 255])  # Set the LED to WHITE
     time.sleep(1)
     controller.set_led([0, 0, 255])  # Set the LED to BLUE
     b = behaviouralModule(controller, debug=True, max_speed=500, robot_type=SEEKER)

@@ -85,8 +85,24 @@ class ThymioController:
         self.camera = ThymioCamera()
 
 
-    def capture_frame_to_numpy(self):
-        return self.camera.read_frame()
+    def process_image(self, height=120, width=160, min_area=500, blr=5):
+
+        # warning - mutation of frame
+        frame = self.camera.read_frame()
+        frame = cv2.resize(frame, (width, height))
+
+        if blr%2 == 0:
+            blr+=1
+
+        blurred_image = cv2.GaussianBlur(frame, (blr, blr), 0)
+
+        # Create a mask
+        mask = cv2.inRange(blurred_image, (0,0,50), (255,255,255))
+        print("MASK: ")
+        print(mask)
+
+        return 
+    
 
     def run_background(self):
         # Use the ClientAsync context manager to handle the connection to the Thymio robot.
