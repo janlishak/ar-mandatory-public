@@ -11,10 +11,12 @@ class behaviouralModule:
                  thymio,
                  max_speed=80,
                  thresholds={"robot": 1200, "black-line": 150, "safe-zone": 800, "front": 2000},
+                 image_settings={"height": 240, "width": 320, "min_area": 1500, "blr": 3},
                  debug=False,
                  robot_type=AVOIDER):
         self.max_speed = max_speed
         self.thymio = thymio
+        self.image_settings = image_settings
         self.thresholds = thresholds
         self.debug = debug
         self.robot_type = robot_type
@@ -95,7 +97,7 @@ class behaviouralModule:
 
         else:
             # TODO: Follow things with camera
-            result = controller.process_image()
+            result = controller.process_image(**self.image_settings)
             sp = int((abs(result - 80) / 80) * 500)
             if not result:
                 print("Nothing to see")
