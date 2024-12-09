@@ -11,7 +11,7 @@ class behaviouralModule:
                  thymio,
                  max_speed=80,
                  thresholds={"robot": 1200, "black-line": 150, "safe-zone": 800, "front": 2000},
-                 image_settings={"height": 240, "width": 320, "min_area": 1500, "blr": 3},
+                 image_settings={"height": 240, "width": 320, "min_area": 8000, "blr": 3},
                  debug=False,
                  robot_type=AVOIDER):
         self.max_speed = max_speed
