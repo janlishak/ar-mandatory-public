@@ -34,8 +34,10 @@ class behaviouralModule:
 
         if result == "left":
             self.set_motor_speed(-self.max_speed, self.max_speed)
+            time.sleep(0.5)
         elif result == "right":
             self.set_motor_speed(self.max_speed, -self.max_speed)
+            time.sleep(0.5)
 
         # Something blocking the way
         if (front_sensors > self.thresholds["front"]).any():
