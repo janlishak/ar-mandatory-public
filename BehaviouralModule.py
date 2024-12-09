@@ -116,11 +116,11 @@ class behaviouralModule:
                         self.set_motor_speed(self.max_speed, 0)
                         time.sleep(0.1)
                 
-            elif result < 80:
+            elif result < (self.image_settings["height"]//2):
                 print("Objective to left")
                 self.set_motor_speed(0, sp)
                 time.sleep(0.5)
-            elif result > 80:
+            elif result > (self.image_settings["height"]//2):
                 print("Objective to right")
                 self.set_motor_speed(sp, 0)
                 time.sleep(0.5)

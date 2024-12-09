@@ -91,6 +91,7 @@ class ThymioController:
 
         # warning - mutation of frame
         frame = self.camera.read_frame()
+        print(frame.shape)
         frame = cv2.resize(frame, (width, height))
 
         if blr%2 == 0:
