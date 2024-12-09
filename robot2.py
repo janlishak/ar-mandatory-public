@@ -87,7 +87,7 @@ class ThymioController:
         self.camera = ThymioCamera()
 
 
-    def process_image(self, height=120, width=160, min_area=500, blr=5):
+    def process_image(self, height=120, width=160, min_area=2000, blr=5):
 
         # warning - mutation of frame
         frame = self.camera.read_frame()
@@ -110,34 +110,36 @@ class ThymioController:
         #cv2.imwrite("mask.jpg", mask)
         # Initialize variables to find the largest contour
         largest_contour = None
-        largest_area = 0
 
         if contours:
             # Find the largest contour
             largest_contour = max(contours, key=cv2.contourArea)
+
+            area = cv2.contourArea(largest_contour)
+            if area > min_area:  # Only consider contours above a certain area threshold
             
-            # Calculate moments to find the centroid
-            M = cv2.moments(largest_contour)
-            if M['m00'] != 0:
-                cx = int(M['m10'] / M['m00'])  # X coordinate of centroid
-                cy = int(M['m01'] / M['m00'])  # Y coordinate of centroid
-                print(f"Centroid of the robot: ({cx}, {cy})")
-                
-                # Draw the contour and centroid on the original image
-                #cv2.drawContours(blurred_image, [largest_contour], -1, (0, 255, 0), 3)
-                #cv2.circle(blurred_image, (cx, cy), 25, (255, 0, 0), -1)
-                #cv2.imwrite("image.jpg", blurred_image)
-                offset = (cx - 60) / 60
-                if offset < 0:
-                    print("Objective to left")
-                    return "left"
+                # Calculate moments to find the centroid
+                M = cv2.moments(largest_contour)
+                if M['m00'] != 0:
+                    cx = int(M['m10'] / M['m00'])  # X coordinate of centroid
+                    cy = int(M['m01'] / M['m00'])  # Y coordinate of centroid
+                    print(f"Centroid of the robot: ({cx}, {cy})")
+                    
+                    # Draw the contour and centroid on the original image
+                    #cv2.drawContours(blurred_image, [largest_contour], -1, (0, 255, 0), 3)
+                    #cv2.circle(blurred_image, (cx, cy), 25, (255, 0, 0), -1)
+                    #cv2.imwrite("image.jpg", blurred_image)
+                    offset = (cx - 60) / 60
+                    if offset < 0:
+                        print("Objective to left")
+                        return "left"
+                    else:
+                        print("Objective to right")
+                        return "right"
                 else:
-                    print("Objective to right")
-                    return "right"
+                    print("No centroid found due to zero area.")
             else:
-                print("No centroid found due to zero area.")
-        else:
-            print("No blue robot detected.")
+                print("No blue robot detected.")
 
         return 
     

@@ -30,14 +30,6 @@ class behaviouralModule:
         # back_sensors = np.array(self.thymio.horizontal_sensors[5:])
         ground_sensors = np.array(self.thymio.ground_sensors)
         #print(front_sensors)
-        result = controller.process_image()
-
-        if result == "left":
-            self.set_motor_speed(-self.max_speed, self.max_speed)
-            time.sleep(0.5)
-        elif result == "right":
-            self.set_motor_speed(self.max_speed, -self.max_speed)
-            time.sleep(0.5)
 
         # Something blocking the way
         if (front_sensors > self.thresholds["front"]).any():
@@ -100,7 +92,20 @@ class behaviouralModule:
 
         else:
             # TODO: Follow things with camera
-            pass
+            if time_since_collision > self.collision_timeout:
+                result = controller.process_image()
+
+                if result == "left":
+                    self.set_motor_speed(-self.max_speed, self.max_speed)
+                    time.sleep(0.5)
+                elif result == "right":
+                    self.set_motor_speed(self.max_speed, -self.max_speed)
+                    time.sleep(0.5)
+                else:
+                    print("We are going random")
+                    r1, r2 = np.random.random(2)
+                    self.set_motor_speed(int(r1*self.max_speed), int(r2*self.max_speed))
+                    time.sleep(0.5)
 
 
 if __name__ == "__main__":
