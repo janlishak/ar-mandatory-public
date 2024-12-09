@@ -101,17 +101,14 @@ class behaviouralModule:
                 print("Nothing to see")
             elif result < 80:
                 print("Objective to left")
-                time.sleep(10)
                 self.set_motor_speed(0, sp)
                 time.sleep(0.5)
             elif result > 80:
                 print("Objective to right")
-                time.sleep(10)
                 self.set_motor_speed(sp, 0)
                 time.sleep(0.5)
             else:
                 print("Objective in front")
-                time.sleep(10)
                 self.set_motor_speed(self.max_speed, self.max_speed)
                 time.sleep(0.5)
             #else:
