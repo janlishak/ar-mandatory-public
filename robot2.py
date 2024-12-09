@@ -101,15 +101,13 @@ class ThymioController:
         # Convert the image to HSV
         hsv_image = cv2.cvtColor(blurred_image, cv2.COLOR_BGR2HSV)
 
-        print(hsv_image.shape)
-
-        print(hsv_image.min(axis=1))
-        print(hsv_image.max(axis=1))
-        input("PAUSEEEEE")
+        #print(hsv_image[:,:,0].min(axis=1))
+        #print(hsv_image.max(axis=1))
+        #input("PAUSEEEEE")
 
         # Define the blue color range
-        lower_blue = np.array([240, 60, 30])
-        upper_blue = np.array([240, 90, 100])
+        lower_blue = np.array([110, 50, 50])
+        upper_blue = np.array([130, 255, 255])
 
         mask = cv2.inRange(hsv_image, lower_blue, upper_blue)
         contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
