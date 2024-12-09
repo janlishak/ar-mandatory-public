@@ -30,7 +30,12 @@ class behaviouralModule:
         # back_sensors = np.array(self.thymio.horizontal_sensors[5:])
         ground_sensors = np.array(self.thymio.ground_sensors)
         #print(front_sensors)
-        controller.process_image()
+        result = controller.process_image()
+
+        if result == "left":
+            self.set_motor_speed(-self.max_speed, self.max_speed)
+        elif result == "right":
+            self.set_motor_speed(self.max_speed, -self.max_speed)
 
         # Something blocking the way
         if (front_sensors > self.thresholds["front"]).any():
