@@ -96,23 +96,25 @@ class behaviouralModule:
         else:
             # TODO: Follow things with camera
             result = controller.process_image()
-
-            if result == "left":
+            sp = int((abs(result - 80) / 80) * 500)
+            if not result:
+                print("Nothing to see")
+            elif result < 80:
                 print("Objective to left")
                 time.sleep(10)
-                self.set_motor_speed(0, self.max_speed//2)
+                self.set_motor_speed(0, sp)
                 time.sleep(0.5)
-            elif result == "right":
+            elif result > 80:
                 print("Objective to right")
                 time.sleep(10)
-                self.set_motor_speed(self.max_speed//2, 0)
+                self.set_motor_speed(sp, 0)
                 time.sleep(0.5)
-            elif result == "center":
+            else:
                 print("Objective in front")
                 time.sleep(10)
                 self.set_motor_speed(self.max_speed, self.max_speed)
                 time.sleep(0.5)
-            else:
+            #else:
                 """
                 if time_since_last_random > self.random_timeout:
                     print("We are going random")

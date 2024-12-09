@@ -129,12 +129,7 @@ class ThymioController:
                     cv2.drawContours(blurred_image, [largest_contour], -1, (0, 255, 0), 3)
                     cv2.circle(blurred_image, (cx, cy), 25, (255, 0, 0), -1)
                     cv2.imwrite("image.jpg", blurred_image)
-                    if cx < 45:
-                        return "left"
-                    elif cx > 75:
-                        return "right"
-                    else:
-                        return "front"
+                    return cx
                 else:
                     pass
                     #print("No centroid found due to zero area.")
@@ -142,7 +137,7 @@ class ThymioController:
                 pass
                 #print("No blue robot detected.")
 
-        return 
+        return False
     
 
     def run_background(self):
