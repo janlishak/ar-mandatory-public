@@ -20,7 +20,7 @@ class behaviouralModule:
         self.robot_type = robot_type
         self.last_collision_time = 0
         self.last_random = 0
-        self.random_timeout = 2
+        self.random_timeout = 4
         self.collision_timeout = 2
         thymio.set_motors([0, 0])
 
