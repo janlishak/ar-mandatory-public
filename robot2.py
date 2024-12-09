@@ -114,13 +114,34 @@ class ThymioController:
         largest_area = 0
 
         # Iterate through contours to find the largest one
-        for contour in contours:
-            area = cv2.contourArea(contour)
-            if area > min_area:  # Only consider contours above a certain area threshold
-                if area > largest_area:
-                    largest_area = area
-                    largest_contour = contour
-                    print("WE FOUND SOMETHING!")
+        #for contour in contours:
+        #    area = cv2.contourArea(contour)
+        #    if area > min_area:  # Only consider contours above a certain area threshold
+        #        if area > largest_area:
+        #            largest_area = area
+        #            largest_contour = contour
+        #            print("WE FOUND SOMETHING!")
+
+        if contours:
+            # Find the largest contour
+            largest_contour = max(contours, key=cv2.contourArea)
+            
+            # Calculate moments to find the centroid
+            M = cv2.moments(largest_contour)
+            if M['m00'] != 0:
+                cx = int(M['m10'] / M['m00'])  # X coordinate of centroid
+                cy = int(M['m01'] / M['m00'])  # Y coordinate of centroid
+                print(f"Centroid of the robot: ({cx}, {cy})")
+                
+                # Draw the contour and centroid on the original image
+                cv2.drawContours(blurred_image, [largest_contour], -1, (0, 255, 0), 3)
+                cv2.circle(blurred_image, (cx, cy), 5, (255, 0, 0), -1)
+                cv2.imwrite("image.jpg", blurred_image)
+            else:
+                print("No centroid found due to zero area.")
+        else:
+            print("No blue robot detected.")
+
         return 
     
 
