@@ -3,6 +3,7 @@ import threading
 from thymio_camera import ThymioCamera
 from tdmclient import ClientAsync
 import cv2
+import numpy as np
 
 AVOIDER = """
 # Variables must be at start
