@@ -131,8 +131,7 @@ class ThymioController:
                     cv2.drawContours(blurred_image, [largest_contour], -1, (0, 255, 0), 3)
                     cv2.circle(blurred_image, (cx, cy), 25, (255, 0, 0), -1)
                     #cv2.imwrite("image.jpg", blurred_image)
-                    contour_rgb_values = blurred_image[largest_contour == 255]
-                    print(contour_rgb_values)
+                    print(blurred_image)
                     return cx
                 else:
                     pass
