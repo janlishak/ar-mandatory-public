@@ -137,9 +137,11 @@ class ThymioController:
                         print("Objective to right")
                         return "right"
                 else:
-                    print("No centroid found due to zero area.")
+                    pass
+                    #print("No centroid found due to zero area.")
             else:
-                print("No blue robot detected.")
+                pass
+                #print("No blue robot detected.")
 
         return 
     
