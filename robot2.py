@@ -130,13 +130,10 @@ class ThymioController:
                     #cv2.circle(blurred_image, (cx, cy), 25, (255, 0, 0), -1)
                     #cv2.imwrite("image.jpg", blurred_image)
                     if cx < 45:
-                        print("Objective to left")
                         return "left"
                     elif cx > 75:
-                        print("Objective to right")
                         return "right"
                     else:
-                        print("Objective in front")
                         return "front"
                 else:
                     pass

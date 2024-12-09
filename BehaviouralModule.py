@@ -98,14 +98,17 @@ class behaviouralModule:
             result = controller.process_image()
 
             if result == "left":
+                print("Objective to left")
                 time.sleep(10)
                 self.set_motor_speed(-self.max_speed//2, self.max_speed//2)
                 time.sleep(0.5)
             elif result == "right":
+                print("Objective to right")
                 time.sleep(10)
                 self.set_motor_speed(self.max_speed//2, -self.max_speed//2)
                 time.sleep(0.5)
             elif result == "center":
+                print("Objective in front")
                 time.sleep(10)
                 self.set_motor_speed(self.max_speed, self.max_speed)
                 time.sleep(0.5)
@@ -122,7 +125,8 @@ class behaviouralModule:
                         self.set_motor_speed(self.max_speed, 0)
                         time.sleep(0.1)
                 
-            self.set_motor_speed(self.max_speed, self.max_speed)
+            #self.set_motor_speed(self.max_speed, self.max_speed)
+            self.set_motor_speed(0, 0)
 
 
 if __name__ == "__main__":
