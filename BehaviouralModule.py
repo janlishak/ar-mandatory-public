@@ -89,8 +89,8 @@ class behaviouralModule:
         current_time = time.time()
         time_since_collision = current_time - self.last_collision_time
         time_since_last_random = current_time - self.last_random
-        self.set_motor_speed(self.max_speed, self.max_speed)
-        """
+        #self.set_motor_speed(self.max_speed, self.max_speed)
+        
         if self.robot_type == AVOIDER:
             if time_since_collision > self.collision_timeout:
                 # No collision in the last 2 seconds, go full speed
@@ -131,7 +131,6 @@ class behaviouralModule:
                 
             self.set_motor_speed(self.max_speed, self.max_speed)
             #self.set_motor_speed(0, 0)
-        """
 
 if __name__ == "__main__":
 
