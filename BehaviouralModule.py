@@ -19,6 +19,8 @@ class behaviouralModule:
         self.debug = debug
         self.robot_type = robot_type
         self.last_collision_time = 0
+        self.last_random = 0
+        self.random_timeout = 2
         self.collision_timeout = 2
         thymio.set_motors([0, 0])
 
@@ -81,6 +83,7 @@ class behaviouralModule:
         controller.is_safe = True
         current_time = time.time()
         time_since_collision = current_time - self.last_collision_time
+        time_since_last_random = current_time - self.last_random
 
         if self.robot_type == AVOIDER:
             if time_since_collision > self.collision_timeout:
@@ -103,7 +106,7 @@ class behaviouralModule:
             elif result == "center":
                 self.set_motor_speed(self.max_speed, self.max_speed)
                 time.sleep(0.5)
-            else:
+            elif time_since_last_random > self.random_timeout:
                 print("We are going random")
                 r = np.random.random()
                 if r < 0.5:
@@ -113,8 +116,9 @@ class behaviouralModule:
                     self.set_motor_speed(self.max_speed, 0)
                     time.sleep(0.5)
                 
-                if time_since_collision > self.collision_timeout:
-                    self.set_motor_speed(self.max_speed, self.max_speed)
+            if time_since_collision > self.collision_timeout:
+                self.set_motor_speed(self.max_speed, self.max_speed)
+                time.sleep(0.5)
 
 
 if __name__ == "__main__":
