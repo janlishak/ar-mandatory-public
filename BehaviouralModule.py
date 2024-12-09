@@ -70,17 +70,20 @@ class behaviouralModule:
             controller.is_safe = False
             return
         
-        if (self.robot_type == AVOIDER) and (ground_sensors > self.thresholds["safe-zone"]).all():
-            print(ground_sensors)
-            print("We are safe!")
-            controller.is_safe = True
-            controller.set_led([0,255,0])
-            time.sleep(1)
-            self.set_motor_speed(0, 0)
-            time.sleep(2)
-            #controller.running = False
-            self.set_motor_speed(self.max_speed, self.max_speed)
-            controller.set_led([0,0,255])
+        if (ground_sensors > self.thresholds["safe-zone"]).all():
+            if self.robot_type == AVOIDER:
+                print(ground_sensors)
+                print("We are safe!")
+                controller.is_safe = True
+                controller.set_led([0,255,0])
+                time.sleep(1)
+                self.set_motor_speed(0, 0)
+                time.sleep(2)
+                #controller.running = False
+                self.set_motor_speed(self.max_speed, self.max_speed)
+                controller.set_led([0,0,255])
+            else:
+                controller.set_led([225,165,0])
 
         controller.is_safe = True
         current_time = time.time()
@@ -101,6 +104,17 @@ class behaviouralModule:
             sp = int((abs(result - 80) / 80) * 500)
             if not result:
                 print("Nothing to see")
+                if time_since_last_random > self.random_timeout:
+                    print("We are going random")
+                    r = np.random.random()
+                    self.last_random = time.time()
+                    if r < 0.5:
+                        self.set_motor_speed(0, self.max_speed)
+                        time.sleep(0.1)
+                    else:
+                        self.set_motor_speed(self.max_speed, 0)
+                        time.sleep(0.1)
+                
             elif result < 80:
                 print("Objective to left")
                 self.set_motor_speed(0, sp)
@@ -113,21 +127,6 @@ class behaviouralModule:
                 print("Objective in front")
                 self.set_motor_speed(self.max_speed, self.max_speed)
                 time.sleep(0.5)
-            #else:
-                """
-                if time_since_last_random > self.random_timeout:
-                    print("We are going random")
-                    r = np.random.random()
-                    self.last_random = time.time()
-
-                    if r < 0.5:
-                        self.set_motor_speed(0, self.max_speed)
-                        time.sleep(0.1)
-                    else:
-                        self.set_motor_speed(self.max_speed, 0)
-                        time.sleep(0.1)
-                """
-                pass
                 
             #self.set_motor_speed(self.max_speed, self.max_speed)
             self.set_motor_speed(0, 0)
