@@ -99,13 +99,13 @@ class behaviouralModule:
 
             if result == "left":
                 self.set_motor_speed(-self.max_speed//2, self.max_speed//2)
-                time.sleep(1)
+                time.sleep(10)
             elif result == "right":
                 self.set_motor_speed(self.max_speed//2, -self.max_speed//2)
-                time.sleep(1)
+                time.sleep(10)
             elif result == "center":
                 self.set_motor_speed(self.max_speed, self.max_speed)
-                time.sleep(1)
+                time.sleep(10)
             else:
                 if time_since_last_random > self.random_timeout:
                     print("We are going random")
