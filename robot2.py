@@ -142,7 +142,7 @@ class ThymioController:
                     print("Objective to left")
                 else:
                     print("Objective to right")
-                self.motor_values = [offset * 500, -offset * 500]
+                #self.motor_values = [int(offset * 500, -offset * 500]
             else:
                 print("No centroid found due to zero area.")
         else:
