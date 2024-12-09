@@ -135,8 +135,14 @@ class ThymioController:
                 
                 # Draw the contour and centroid on the original image
                 cv2.drawContours(blurred_image, [largest_contour], -1, (0, 255, 0), 3)
-                cv2.circle(blurred_image, (cx, cy), 5, (255, 0, 0), -1)
+                cv2.circle(blurred_image, (cx, cy), 25, (255, 0, 0), -1)
                 cv2.imwrite("image.jpg", blurred_image)
+                offset = (cx - 60) / 60
+                if offset < 0:
+                    print("Objective to left")
+                else:
+                    print("Objective to right")
+                self.motor_values = [offset * 500, -offset * 500]
             else:
                 print("No centroid found due to zero area.")
         else:
