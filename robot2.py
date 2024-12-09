@@ -111,6 +111,8 @@ class ThymioController:
         # Initialize variables to find the largest contour
         largest_contour = None
 
+        cv2.imwrite("test.jpg", blurred_image)
+
         if contours:
             # Find the largest contour
             largest_contour = max(contours, key=cv2.contourArea)
