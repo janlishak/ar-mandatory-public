@@ -91,7 +91,6 @@ class ThymioController:
 
         # warning - mutation of frame
         frame = self.camera.read_frame()
-        print(frame.shape)
         frame = cv2.resize(frame, (width, height))
 
         if blr%2 == 0:
@@ -116,7 +115,7 @@ class ThymioController:
         # Initialize variables to find the largest contour
         largest_contour = None
 
-        cv2.imwrite("test.jpg", blurred_image)
+        img_id = 0
 
         if contours:
             # Find the largest contour
@@ -135,7 +134,8 @@ class ThymioController:
                     # Draw the contour and centroid on the original image
                     cv2.drawContours(blurred_image, [largest_contour], -1, (0, 255, 0), 3)
                     cv2.circle(blurred_image, (cx, cy), 25, (255, 0, 0), -1)
-                    cv2.imwrite("image.jpg", blurred_image)
+                    img_id += 1
+                    cv2.imwrite(f"image{img_id}.jpg", blurred_image)
                     return cx
                 else:
                     pass
