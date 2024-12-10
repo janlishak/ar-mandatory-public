@@ -137,7 +137,7 @@ class behaviouralModule:
 
 if __name__ == "__main__":
 
-    robot_type = SEEKER ## SET HERE THE ROBOT TYPE
+    robot_type = AVOIDER ## SET HERE THE ROBOT TYPE
     controller = ThymioController()
     print("LED set to WHITE")
     controller.set_led([255, 255, 255])  # Set the LED to WHITE
