@@ -177,7 +177,7 @@ class ThymioController:
                         #print(f"message from Thymio: {message}")
 
                         if (message == 1) and (self.robot_type == "AVOIDER"):
-                            print("I'm so ashamed!", message, self.program)
+                            print(f"I'M SO ASHAMED!! (msg={message})")
                             node.v.motor.left.target = 0
                             node.v.motor.right.target = 0
                             node.v.leds.top = [32, 0, 32]
