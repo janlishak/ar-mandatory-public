@@ -72,7 +72,7 @@ onevent timer1
 """
 
 class ThymioController:
-    def __init__(self, robot_type="AVOIDER"):
+    def __init__(self, robot_type):
         self.motor_values = [0, 0]  # Default motor values
         self.led_values = [0, 0, 255]  # Default LED values
         self.running = True
