@@ -172,7 +172,7 @@ class ThymioController:
                     while self.running:
 
                         message = node.v.prox.comm.rx
-                        #print(f"message from Thymio: {message}")
+                        print(f"message from Thymio: {message}")
 
                         if (message == 1) and (self.robot_type == "AVOIDER"):
                             print(f"I'M SO ASHAMED!! (msg={message})")
