@@ -83,7 +83,7 @@ class behaviouralModule:
                 self.set_motor_speed(self.max_speed, self.max_speed)
                 controller.set_led([0,0,255])
             else:
-                controller.set_led([225,165,0])
+                controller.set_led([225,215,0])
 
         controller.is_safe = True
         current_time = time.time()
