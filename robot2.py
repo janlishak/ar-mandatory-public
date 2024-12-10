@@ -71,7 +71,6 @@ onevent timer1
     timer.period[1] = 0
 """
 
-
 class ThymioController:
     def __init__(self, robot_type="AVOIDER"):
         self.motor_values = [0, 0]  # Default motor values
@@ -89,9 +88,10 @@ class ThymioController:
         self.robot_type = robot_type
         self.is_safe = False
         self.camera = ThymioCamera()
+        self.img_id = 0
 
 
-    def process_image(self, height=120, width=160, min_area=1500, blr=3):
+    def process_image(self, height=120, width=160, min_area=1500, blr=3, ):
 
         # warning - mutation of frame
         frame = self.camera.read_frame()
@@ -119,8 +119,6 @@ class ThymioController:
         # Initialize variables to find the largest contour
         largest_contour = None
 
-        img_id = 0
-
         if contours:
             # Find the largest contour
             largest_contour = max(contours, key=cv2.contourArea)
@@ -138,8 +136,8 @@ class ThymioController:
                     # Draw the contour and centroid on the original image
                     cv2.drawContours(blurred_image, [largest_contour], -1, (0, 255, 0), 3)
                     cv2.circle(blurred_image, (cx, cy), 25, (255, 0, 0), -1)
-                    img_id += 1
-                    cv2.imwrite(f"../../image{img_id}.jpg", blurred_image)
+                    self.img_id += 1
+                    cv2.imwrite(f"../../image{self.img_id}.jpg", blurred_image)
                     return cx
                 else:
                     pass
