@@ -17,7 +17,7 @@ class behaviouralModule:
         self.thresholds = thresholds
         self.debug = debug
         self.robot_type = robot_type
-        self.thymio.robot_type = robot_type
+        controller.robot_type = robot_type
         self.last_collision_time = 0
         self.last_random = 0
         self.random_timeout = 4
@@ -136,7 +136,7 @@ if __name__ == "__main__":
 
     robot_type = "AVOIDER" ## SET HERE THE ROBOT TYPE
 
-    
+
     controller = ThymioController()
     print("LED set to WHITE")
     controller.set_led([255, 255, 255])  # Set the LED to WHITE
