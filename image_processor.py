@@ -3,6 +3,8 @@ import numpy as np
 import time
 import threading
 
+from thymio_camera import ThymioCamera
+
 
 class ComputerCamera:
     def __init__(self) -> None:
@@ -214,10 +216,10 @@ class ImageProcessor:
 
 
 if __name__ == '__main__':
-    computer_camera = ComputerCamera()
-    # thymio_camera = ThymioCamera()
+    # computer_camera = ComputerCamera()
+    thymio_camera = ThymioCamera()
     image_processor = ImageProcessor()
-    image_processor.set_frame_provider(computer_camera.read_frame)
+    image_processor.set_frame_provider(thymio_camera.read_frame)
 
     while True:
         image_processor.update()
