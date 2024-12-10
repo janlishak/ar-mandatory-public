@@ -141,7 +141,7 @@ if __name__ == "__main__":
     print("LED set to WHITE")
     controller.set_led([255, 255, 255])  # Set the LED to WHITE
     time.sleep(0.5)
-    if robot_type == "AVOIDER":
+    if robot_type == "SEEKER":
         controller.set_led([0, 0, 255])  # Set the LED to BLUE
     else:
         controller.set_led([255, 0, 0])  # Set the LED to RED
