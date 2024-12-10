@@ -73,7 +73,7 @@ onevent timer1
 
 
 class ThymioController:
-    def __init__(self, program=AVOIDER):
+    def __init__(self, robot_type="AVOIDER"):
         self.motor_values = [0, 0]  # Default motor values
         self.led_values = [0, 0, 255]  # Default LED values
         self.running = True
@@ -82,8 +82,11 @@ class ThymioController:
         # Start the background thread that will run the Thymio control loop
         self.thread = threading.Thread(target=self.run_background, daemon=True)
         self.thread.start()
-        self.program = program
-        self.robot_type
+        if robot_type == "SEEKER":
+            self.program = SEEKER
+        else:
+            self.program = AVOIDER
+        self.robot_type = robot_type
         self.is_safe = False
         self.camera = ThymioCamera()
 

@@ -3,9 +3,6 @@ import numpy as np
 from robot2 import ThymioController
 import threading
 
-SEEKER = 0
-AVOIDER = 1
-
 class behaviouralModule:
     def __init__(self,
                  thymio,
@@ -13,7 +10,7 @@ class behaviouralModule:
                  thresholds={"robot": 1200, "black-line": 150, "safe-zone": 800, "front": 2000},
                  image_settings={"height": 616, "width": 820, "min_area": 6000, "blr": 1},
                  debug=False,
-                 robot_type=AVOIDER):
+                 robot_type="AVOIDER"):
         self.max_speed = max_speed
         self.thymio = thymio
         self.image_settings = image_settings
@@ -72,7 +69,7 @@ class behaviouralModule:
             return
         
         if (ground_sensors > self.thresholds["safe-zone"]).all():
-            if self.robot_type == AVOIDER:
+            if self.robot_type == "AVOIDER":
                 print(ground_sensors)
                 print("We are safe!")
                 controller.is_safe = True
@@ -92,7 +89,7 @@ class behaviouralModule:
         time_since_last_random = current_time - self.last_random
         #self.set_motor_speed(self.max_speed, self.max_speed)
         
-        if self.robot_type == AVOIDER:
+        if self.robot_type == "AVOIDER":
             controller.set_led([0,0,255])
             if time_since_collision > self.collision_timeout:
                 # No collision in the last 2 seconds, go full speed
@@ -137,12 +134,14 @@ class behaviouralModule:
 
 if __name__ == "__main__":
 
-    robot_type = SEEKER ## SET HERE THE ROBOT TYPE
+    robot_type = "AVOIDER" ## SET HERE THE ROBOT TYPE
+
+    
     controller = ThymioController()
     print("LED set to WHITE")
     controller.set_led([255, 255, 255])  # Set the LED to WHITE
     time.sleep(0.5)
-    if robot_type == AVOIDER:
+    if robot_type == "AVOIDER":
         controller.set_led([0, 0, 255])  # Set the LED to BLUE
     else:
         controller.set_led([255, 0, 0])  # Set the LED to RED
