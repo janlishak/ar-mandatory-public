@@ -92,6 +92,7 @@ class behaviouralModule:
         #self.set_motor_speed(self.max_speed, self.max_speed)
         
         if self.robot_type == AVOIDER:
+            controller.set_led([0,0,255])
             if time_since_collision > self.collision_timeout:
                 # No collision in the last 2 seconds, go full speed
                 self.set_motor_speed(self.max_speed, self.max_speed)
@@ -101,6 +102,7 @@ class behaviouralModule:
 
         else:
             # TODO: Follow things with camera
+            controller.set_led([255,0,0])
             result = controller.process_image(**self.image_settings)
             sp = int((abs(result - (self.image_settings["height"]//2)) / (self.image_settings["height"]//2)) * self.max_speed)
             if not result:
