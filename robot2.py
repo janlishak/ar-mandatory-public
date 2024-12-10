@@ -83,6 +83,7 @@ class ThymioController:
         self.thread = threading.Thread(target=self.run_background, daemon=True)
         self.thread.start()
         self.program = program
+        self.robot_type
         self.is_safe = False
         self.camera = ThymioCamera()
 
@@ -172,7 +173,7 @@ class ThymioController:
                         message = node.v.prox.comm.rx
                         #print(f"message from Thymio: {message}")
 
-                        if (message == 1) and (self.program == AVOIDER):
+                        if (message == 1) and (self.robot_type == AVOIDER):
                             print("I'm so ashamed!", message, self.program)
                             node.v.motor.left.target = 0
                             node.v.motor.right.target = 0

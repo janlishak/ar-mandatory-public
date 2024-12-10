@@ -20,7 +20,7 @@ class behaviouralModule:
         self.thresholds = thresholds
         self.debug = debug
         self.robot_type = robot_type
-        self.controller = robot_type
+        self.thymio.robot_type = robot_type
         self.last_collision_time = 0
         self.last_random = 0
         self.random_timeout = 4
