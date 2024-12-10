@@ -146,7 +146,7 @@ if __name__ == "__main__":
     else:
         controller.set_led([255, 0, 0])  # Set the LED to RED
     
-    b = behaviouralModule(controller, debug=True, max_speed=400, robot_type=robot_type)
+    b = behaviouralModule(controller, debug=True, max_speed=0, robot_type=robot_type)
     def behavior_loop():
         while True:
             b.update()
