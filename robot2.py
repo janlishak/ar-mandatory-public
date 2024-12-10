@@ -139,7 +139,7 @@ class ThymioController:
                     cv2.drawContours(blurred_image, [largest_contour], -1, (0, 255, 0), 3)
                     cv2.circle(blurred_image, (cx, cy), 25, (255, 0, 0), -1)
                     img_id += 1
-                    cv2.imwrite(f"image{img_id}.jpg", blurred_image)
+                    cv2.imwrite(f"../../image{img_id}.jpg", blurred_image)
                     return cx
                 else:
                     pass
