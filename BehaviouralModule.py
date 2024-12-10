@@ -156,7 +156,7 @@ if __name__ == "__main__":
     thread.start()
 
     # Wait and shutdown
-    time.sleep(120)
+    time.sleep(200)
     controller.set_led([32, 32, 0])  # Set the LED to yellow
     time.sleep(1)
     controller.stop()
