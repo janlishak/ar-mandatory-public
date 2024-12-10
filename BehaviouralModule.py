@@ -137,7 +137,7 @@ class behaviouralModule:
 
 if __name__ == "__main__":
 
-    robot_type = AVOIDER ## SET HERE THE ROBOT TYPE
+    robot_type = SEEKER ## SET HERE THE ROBOT TYPE
     controller = ThymioController()
     print("LED set to WHITE")
     controller.set_led([255, 255, 255])  # Set the LED to WHITE
@@ -147,7 +147,7 @@ if __name__ == "__main__":
     else:
         controller.set_led([255, 0, 0])  # Set the LED to RED
     
-    b = behaviouralModule(controller, debug=True, max_speed=200, robot_type=robot_type)
+    b = behaviouralModule(controller, debug=True, max_speed=500, robot_type=robot_type)
     def behavior_loop():
         while True:
             b.update()
