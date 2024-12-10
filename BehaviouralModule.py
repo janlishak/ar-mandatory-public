@@ -134,7 +134,7 @@ class behaviouralModule:
 
 if __name__ == "__main__":
 
-    robot_type = "SEEKER" ## SET HERE THE ROBOT TYPE
+    robot_type = "AVOIDER" ## SET HERE THE ROBOT TYPE
 
 
     controller = ThymioController()
