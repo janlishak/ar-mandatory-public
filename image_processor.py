@@ -148,7 +148,7 @@ class ImageProcessor:
                 cv2.circle(frame, (self.cX, self.cY), 7, (255, 0, 0), -1)  # Blue circle
 
                 # Put text on the image to display the centroid coordinates
-                # cv2.putText(frame, f'X: {cX}, Y: {cY}', (cX + 10, cY - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)  # White text
+                cv2.putText(frame, f'X: {self.cX}, Y: {self.cY}', (self.cX + 10, self.cY - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)  # White text
 
                 resolution = 10
                 mapped_x = int(self.cX * resolution / self.width)
