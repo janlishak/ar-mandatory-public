@@ -3,14 +3,12 @@ import os
 import pickle
 import random
 import time
+import sys
+sys.path.append('../')
 
-from BehaviouralModule import behaviouralModule
+from robot.image_processor import ImageProcessor
 from simulation import Simulation
-from image_processor import ImageProcessor
 import threading
-
-SEEKER = 0
-AVOIDER = 1
 
 class State:
     def __init__(self, image_processor = None, simulation = None, fromString = None) -> None:
@@ -150,17 +148,10 @@ class QValueStore:
 
 
 class ReinforcementProblem:
-    def __init__(self, is_simulation=False) -> None:
+    def __init__(self) -> None:
+        self.simulation = Simulation()
         self.image_processor = ImageProcessor()
-
-        if is_simulation:
-            self.simulation = Simulation()
-            self.image_processor.set_trackbar_values([29, 78, 139, 255, 110, 255, 5, 30])
-        else:
-            from robot_metal import Metal
-            self.simulation = Metal()
-            self.image_processor.set_trackbar_values([41, 83, 97, 151, 110, 255, 5, 30])
-
+        self.image_processor.set_trackbar_values([29, 78, 139, 255, 110, 255, 5, 30])
         self.image_processor.set_frame_provider(self.simulation.capture_frame_to_numpy)
 
         self.simulation.update()
@@ -183,7 +174,7 @@ class ReinforcementProblem:
     # Take the given action and state, and return
     # a pair consisting of the reward and the new state.
     def take_action(self, state: State, action: Action) -> tuple[float, State]:
-        print(action)
+
         # todo: disabled here!
         self.simulation.perform_action(str(action))
         time.sleep(0.25)
@@ -287,11 +278,10 @@ def q_learning(
 
 
 if __name__ == "__main__":
-    is_simulation = False
     store = QValueStore("training")
     # store.print_best_actions()
     store.print_best_action_per_state()
-    problem = ReinforcementProblem(is_simulation)
+    problem = ReinforcementProblem()
 
     learning_rate = 0.1
     discount_rate = 0.75
@@ -306,25 +296,8 @@ if __name__ == "__main__":
     thread = threading.Thread(target=q_learn_loop, daemon=True)
     thread.start()
 
-    # SIMULATION
-    if is_simulation:
-        def update():
-            problem.simulation.update()
-            problem.image_processor.update()
-        problem.simulation.app.run()
+    def update():
+        problem.simulation.update()
+        problem.image_processor.update()
 
-    # REAL WORLD
-    else:
-        # Behavior Module
-        b = behaviouralModule(problem.simulation.controller, debug=True, max_speed=100, robot_type=SEEKER)
-        def behavior_loop():
-            while True:
-                b.update()
-                time.sleep(0.2)
-
-
-        thread = threading.Thread(target=behavior_loop, daemon=True)
-        thread.start()
-        # Image processing loop
-        while True:
-            problem.image_processor.update()
+    problem.simulation.app.run()

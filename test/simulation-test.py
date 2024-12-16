@@ -1,5 +1,7 @@
-from simulation import Simulation
-from image_processor import ImageProcessor
+import sys
+sys.path.append('../')
+from simulation.simulation import Simulation
+from robot.image_processor import ImageProcessor
 
 if __name__ == "__main__":
     simulation = Simulation()
