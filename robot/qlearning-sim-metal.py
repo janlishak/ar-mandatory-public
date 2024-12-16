@@ -6,9 +6,9 @@ import time
 import sys
 sys.path.append('../')
 
-from robot.BehaviouralModule import behaviouralModule
+from BehaviouralModule import behaviouralModule
 from simulation.simulation import Simulation
-from robot.image_processor import ImageProcessor
+from image_processor import ImageProcessor
 import threading
 
 SEEKER = 0
